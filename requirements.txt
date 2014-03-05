@@ -4,5 +4,5 @@ MarkupSafe==0.18
 Werkzeug==0.9.4
 gunicorn==18.0
 itsdangerous==0.23
-mongokit
-requests
+mongokit==0.9.1.1
+requests==2.0.1
