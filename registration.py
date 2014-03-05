@@ -4,12 +4,12 @@ from flask import render_template
 from hashlib import sha224
 from mongokit import Connection, Document
 
-import sqlite3 
+
 import time
 import requests
 import random
 import string
-import csv
+
 
 # configuration
 MONGODB_HOST = '127.0.0.1'
