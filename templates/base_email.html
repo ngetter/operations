@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html lang="he">
+  <head>
+	{% block head %}
+    <meta charset="utf-8">
+    <title>רישום לפעולה</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+  {% endblock %}
+  </head>
+
+  <body dir=rtl>
+	<table width=300 height=200>
+	<tr><td>
+	<img src="http://192.168.2.104:5000/static/img/logo.jpg" class="img-rounded pull-right" style="margin:3em">
+	</td>
+	<td>
+	{% block content %}{% endblock %}
+	</td>
+	</tr>
+	</table>
+	{% block footer %}
+	{% endblock %}
+  </body>
+</html>

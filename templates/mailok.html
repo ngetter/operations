@@ -1,0 +1,13 @@
+﻿{% extends "base.html" %}
+
+
+{% block navbar %}{% endblock %}
+{% block content %}
+<div class="well well-large">
+<img src="http://192.168.2.104:5000/static/img/logo.jpg" class="img-rounded pull-right" style="margin:3em">
+<H1>רישום למערכת חניכים/סוליסטים</H1>
+<p class="text-right"><strong>{{username}} </strong> הצטרפת למערכת רישום החניכים/סוליסטים לפעולה במרכז הדאייה נגב</p>
+<p class="text-right">על מנת להשלים את תהליך הרישום, אנא 
+<a href="http://192.168.2.104:5000/token?token={{token}}">לחץ כאן</a>
+</div>
+{% endblock %}
