@@ -28,35 +28,6 @@
 {% endblock %}
 
 {% block content %}
-<button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal" style="margin-bottom:1em;">
-  <span class="glyphicon glyphicon-th" style="padding-bottom:0.4em;"></span>
-</button>
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			<h4 class="modal-title" id="myModalLabel">הוסף פעולה</h4>
-		</div>
-		<form method="post">
-			<div class="modal-body">
-				<input type="text" class="input-block-level" placeholder="תאריך" name="_id">
-				<input type="text" class="input-block-level" placeholder="יום" name="day">
-				<input type="text" class="input-block-level" placeholder="הערה" name="comment">
-				<input type="text" class="input-block-level" placeholder="מדריך" name="instractor">
-				<input type="text" class="input-block-level" placeholder="אחראי בשדה" name="incharge">
-
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">סגור</button>
-				<button type="submit" class="btn btn-primary">שמור</button>
-			</div>
-		</form>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
 
 <table class='table table-condensed'>
     {% for k in l %}
@@ -71,7 +42,7 @@
     {% endif %}
     
     <tr class='{{ buttonStatus.rowClass }}' id='{{ k._id }}'>
-        <td>{{ k['_id'] }}</td>
+        <td>{{ k['date'] }}<br>{{ k['comment'] }}</td>
         <td><li>{{ k['instractor'] }}</li><li>{{ k['incharge'] }}</li></td>
         <td><button type="button" class="btn {{ buttonStatus.buttonClass }} btn-xs btn-arrival" data-id="{{ k['_id'] }}">{{ buttonStatus.buttonCaption }}</button></td>
     </tr>

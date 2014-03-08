@@ -11,8 +11,9 @@ import string
 
 
 # configuration
-#MONGODB_HOST = '127.0.0.1'
-#MONGODB_PORT = 27017
+# MONGODB_HOST = '127.0.0.1'
+# MONGODB_PORT = 27017
+# MONGODB_DATABASE = 'test'
 
 MONGODB_HOST = 'troup.mongohq.com'
 MONGODB_PORT = 10001
@@ -39,7 +40,7 @@ def index():
     if 'username' in session:
         session.permanent = True
         col = mdb['operations']
-        l = list(col.find())
+        l = list(col.find().sort("_id",1))
         return render_template('main.html', l=l, username=escape(session['username']))	
     else:
         return redirect(url_for('register'))
@@ -51,10 +52,10 @@ def signin():
 		else:
 			return render_template('signin.html')
 
-@app.route('/token', methods=['GET'])
+@app.route('/token/<get_token>', methods=['GET'])
 def token():
     if request.method == 'GET':
-        get_token = request.args.get('token','')
+#        get_token = request.args.get('token','')
         try:
             r = mdb['tokens'].find_one({"_id":get_token})
             session['username'] = r['username']
@@ -78,14 +79,14 @@ def register():
         r = send_simple_message(request.form['username'],request.form['pname'], token )
 
 
-        return render_template(url_for('mailok.html'))
+        return render_template(url_for('mailok.html', username=request.form['username']))
     else:
         return render_template('register.html')
 
 @app.route('/mailgun')
 def mailgun():
-	r = send_simple_message()
-	return render_template('mailok.html')
+	r = send_simple_message('ngetter@gmail.com','Experiment','bla bla token bla')
+	return render_template('mailok.html', username='ngetter@gmail.com')
 
 def send_simple_message(to, member, token):
     return requests.post(
@@ -104,13 +105,6 @@ def readOperatios():
 		df = csv.reader(f)
 		ops = [line for line in df]
 	
-		conn = sqlite3.connect('example.db')
-		c = conn.cursor()
-		c.executemany('insert into operations values(?,?,?,?,?)',ops[1:])
-	
-		conn.commit()
-		conn.close()
-	
 		return redirect(url_for('index'))
 		
 @app.route('/mark_arrival', methods=['POST'])
@@ -119,7 +113,7 @@ def arrival():
     un = request.form['username']
     #un = "ngc-registration@balistica.org"
     con = mdb['operations']
-    r = con.find_one({'_id':u'%s'%id})
+    r = con.find_one({'_id':int(id)})
     try:
         if un in r['participate']:
             r['participate'].remove(un)
@@ -133,7 +127,8 @@ def arrival():
             
     except TypeError:
         return 'Type Error %s'%id
-    
+    except ValueError:
+        return 'ValueError'
     except KeyError:
         r['participate'] = [un]
         con.save(r) 
