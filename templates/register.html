@@ -1,8 +1,6 @@
 ﻿{% extends "base.html" %}
 
 {% block customcss %}
-    
-
     <style type="text/css">
       body {
         padding-top: 40px;
@@ -47,17 +45,46 @@
     <input type="text" placeholder="כתובת דואר אלקטרוני" name="username">
     <span class="help-block">כתובת הדואר האלקטרוני תשמש למשלוח הודעות מערכת בנוגע לרישום חברים לפעולה</span>
 
-    <label>שם פרטי</label>
-    <input type="text" placeholder="הכנס שם פרטי" name="pname">
+    <label>שם פרטי ומשפחה</label>
+    <input type="text" placeholder="הכנס שם פרטי ומשפחה" name="plname">
 
-    <label>שם משפחה</label>
-    <input type="text" placeholder="הכנס שם משפחה" name="lname">
+    <label>שלב בהכשרה</label>
+    <div class="radio">
+      <label>
+        <input type="radio" name="status" id="status" value="חניך" checked>
+        חניך
+      </label>
+    </div>
+    <div class="radio">
+      <label>
+        <input type="radio" name="status" id="status" value="סוליסט">
+        סוליסט
+      </label>
+    </div>
 
-    <label>טלפון</label>
-    <input type="text" placeholder="הכנס טלפון" name="phone">
-	
-
+    <label  data-container="body" >צ'ק על&nbsp;&nbsp;&nbsp;&nbsp;</label>
+    <div id="group-check" class="btn-group" data-toggle="buttons" data-toggle="popover" data-trigger="hover" data-placement="left" data-content="על איזה דאון אתה נוהג לטוס סולו?">
+      <label class="btn btn-primary">
+        <input name='KG' class='btn-check text-right' type="checkbox"> KG
+      </label>
+      <label  class="btn btn-primary">
+        <input name='AH' class='btn-check text-right' type="checkbox"> AH
+      </label>
+    </div>
+    <div>
     <button type="submit" class="btn btn-large btn-primary">שלח</button>
+    </div>
   </fieldset>
 </form>
+{% endblock %}
+
+{% block script %}
+<script>
+
+    $(".btn-check").click(function(){
+            $("#check").val($(this).val())
+        })
+    $("#group-check").popover('hide');
+
+</script>
 {% endblock %}

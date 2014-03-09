@@ -1,6 +1,5 @@
 ﻿import os
-from flask import Flask, Markup,  request, redirect, url_for, session, escape
-from flask import render_template
+from flask import Flask, Markup,  request, redirect, url_for, session, escape, render_template
 from flask.ext.mongokit import MongoKit
 
 from hashlib import sha224
@@ -8,7 +7,7 @@ import time
 import requests
 import random
 import string
-
+import ast
 
 # configuration
 # MONGODB_HOST = '127.0.0.1'
@@ -32,16 +31,18 @@ mdb = MongoKit(app)
 @app.route('/index')
 @app.route('/', methods=['POST','GET'])
 def index():
-    if request.method == 'POST':
-        collection = mdb['operations']
-        operation = [request.form.to_dict(flat=True)]
-        collection.insert(operation)
-
     if 'username' in session:
         session.permanent = True
+        username = escape(session['username'])
+        try:
+            users = mdb['users']
+            r = users.find_one({'username':username})
+        except TypeError:
+            return redirect(url_for('logout'))
+                
         col = mdb['operations']
         l = list(col.find().sort("_id",1))
-        return render_template('main.html', l=l, username=escape(session['username']))	
+        return render_template('main.html', l=l, user=r)	
     else:
         return redirect(url_for('register'))
 
@@ -52,14 +53,20 @@ def signin():
 		else:
 			return render_template('signin.html')
 
+@app.route('/logout')
+def logout():
+    # remove the username from the session if it's there
+    session.pop('username', None)
+    return redirect(url_for('index'))
+    
 @app.route('/token/<get_token>', methods=['GET'])
-def token():
+def token(get_token):
     if request.method == 'GET':
-#        get_token = request.args.get('token','')
         try:
             r = mdb['tokens'].find_one({"_id":get_token})
-            session['username'] = r['username']
+            session['username'] = r['user']['username']
             session.permanent = True
+            mdb['users'].insert(r['user'])
             mdb['tokens'].remove(r)
 
         except KeyError:
@@ -72,14 +79,12 @@ def token():
 @app.route('/register', methods=['POST','GET'])
 def register():
     if request.method == 'POST':
-        mdb['users'].insert([request.form.to_dict(flat=True)])
 
         token = id_generator(size=40)
-        mdb['tokens'].insert([{"_id":token, "username":request.form['username']}])
-        r = send_simple_message(request.form['username'],request.form['pname'], token )
+        mdb['tokens'].insert([{"_id":token, "user":request.form.to_dict(flat=True)}])
+        r = send_simple_message(request.form['username'],request.form['plname'], token )
 
-
-        return render_template(url_for('mailok.html', username=request.form['username']))
+        return render_template('mailok.html', username=request.form['username'], plname=request.form['plname'])
     else:
         return render_template('register.html')
 

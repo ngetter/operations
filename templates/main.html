@@ -10,6 +10,7 @@
 			data: {id: btn.data('id'), username:'{{username}}'}
 			})
 			.done(function(str){
+                btn.button('reset')
                 if(str=='par') {
                     btn.html('משתתף');
                     btn.removeClass('btn-primary').addClass('btn-success');
