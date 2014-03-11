@@ -7,7 +7,7 @@
 		$.ajax({
 			method: 'POST',
 			url: 'mark_arrival',
-			data: {id: btn.data('id'), username:'{{username}}'}
+			data: {id: btn.data('id'), username:'{{user.username}}'}
 			})
 			.done(function(str){
                 btn.button('reset')
@@ -33,7 +33,7 @@
 <table class='table table-condensed'>
     {% for k in l %}
     {% if k.participate %}
-        {% if username not in k.participate  %}
+        {% if user.username not in k.participate  %}
             {% set buttonStatus = {'buttonClass':'btn-primary','buttonCaption':'לא משתתף', 'rowClass':'warning'} %}
         {% else %}
             {% set buttonStatus = {'buttonClass':'btn-success','buttonCaption':'משתתף', 'rowClass':'success'} %}
