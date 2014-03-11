@@ -51,12 +51,7 @@
 		</div>
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav navbar-right">
-            {% if user.KG %}
-            <li><p class="navbar-text navbar-right label label-info">KG</p></li>
-            {% endif %}
-            {% if user.AH %}
-            <li><p class="navbar-text navbar-right label label-info">AH</p></li>
-            {% endif %}            
+    
             <li><p class="navbar-text navbar-right label label-info">{{ user.status }}</p></li>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b class="caret"></b> {{ user.username }} </a>
