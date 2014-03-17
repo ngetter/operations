@@ -53,7 +53,7 @@ def index():
             return redirect(url_for('logout'))
                 
         col = mdb['operations']
-        l = list(col.find().sort("date",1))
+        l = list(col.find().sort("date",1).limit(12))
         return render_template('main.html', l=l, user=r)	
     else:
         return redirect(url_for('register'))
