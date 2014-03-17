@@ -2,6 +2,11 @@
 from flask import Flask, Markup,  request, redirect, url_for, session, escape, render_template
 from flask.ext.mongokit import MongoKit
 
+from flask_wtf import Form,RecaptchaField
+from wtforms import TextField
+from wtforms.fields.html5 import EmailField
+from wtforms.validators import DataRequired, Email
+
 from hashlib import sha224
 import time
 import requests
@@ -20,14 +25,21 @@ MONGODB_DATABASE = 'ngc-registration'
 MONGODB_USERNAME = 'nirg'
 MONGODB_PASSWORD  = 'dilk2d123'
 
+RECAPTCHA_PUBLIC_KEY = "6LcWKPASAAAAAN4dF2Qf7Ojyv6vpv4FvXFoxR6SC"
+RECAPTCHA_PRIVATE_KEY = "6LcWKPASAAAAAKpIVc_iPFM7T6xtyebNCplhIB5h"
+RECAPTCHA_OPTIONS = {"theme":"white"}
 app = Flask(__name__)
 app.config.from_object(__name__)
 
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
 mdb = MongoKit(app)                        
-               
 
+class frmRegistration(Form):
+    username = TextField(u'דואר אלקטרוני', validators=[DataRequired(), Email([u'בשדה זה יש להקליד כתובת אימייל תקינה','has-error'])]) 
+    #recaptcha = RecaptchaField()
+    plname = TextField(u'שם פרטי ושם משפחה', validators=[DataRequired(u'יש להקליד שם')])
+    
 @app.route('/index')
 @app.route('/', methods=['POST','GET'])
 def index():
@@ -41,7 +53,7 @@ def index():
             return redirect(url_for('logout'))
                 
         col = mdb['operations']
-        l = list(col.find().sort("_id",1))
+        l = list(col.find().sort("date",1))
         return render_template('main.html', l=l, user=r)	
     else:
         return redirect(url_for('register'))
@@ -59,17 +71,24 @@ def logout():
     session.pop('username', None)
     return redirect(url_for('index'))
     
-@app.route('/token/<get_token>', methods=['GET'])
+@app.route('/login/<get_token>', methods=['GET'])
 def token(get_token):
     if request.method == 'GET':
         try:
             r = mdb['tokens'].find_one({"_id":get_token})
-            session['username'] = r['user']['username']
-            session.permanent = True
-            mdb['users'].insert(r['user'])
-            mdb['tokens'].remove(r)
+            user = mdb['users'].find_one({"username":r['user']['username']})
+            try:
+                session['username'] = user['username']
+                session.permanent = True
+            except TypeError:
+            
+                session['username'] = r['user']['username']
+                session.permanent = True
+                mdb['users'].insert(r['user'])
+            finally:
+                mdb['tokens'].remove(r)
 
-        except KeyError:
+        except TypeError:
             return render_template('token_unavaliable.html')
 
         return redirect(url_for('index'))
@@ -78,15 +97,15 @@ def token(get_token):
 	
 @app.route('/register', methods=['POST','GET'])
 def register():
-    if request.method == 'POST':
-
+    form = frmRegistration()
+    if form.validate_on_submit():
         token = id_generator(size=40)
         mdb['tokens'].insert([{"_id":token, "user":request.form.to_dict(flat=True)}])
         r = send_simple_message(request.form['username'],request.form['plname'], token )
 
         return render_template('mailok.html', username=request.form['username'], plname=request.form['plname'])
     else:
-        return render_template('register.html')
+        return render_template('register.html', form=form)
 
 @app.route('/mailgun')
 def mailgun():
@@ -99,9 +118,9 @@ def send_simple_message(to, member, token):
         auth=("api", "key-6vcbt7a5dv8p754k3myvzqb5p8123ts5"),
         data={"from": "Nir Getter <ngetter@gmail.com>",
               "to": to,
-              "subject": "רישום למערכת",
-              "text": "נרשמת איזה יופי",
-			  "html": render_template('register_email.html',username=member, token=token)})
+              "subject": u"אימות רישום למערכת חניכים - מרכז דאייה נגב [%s]"%member,
+              "text": u"נרשמת למערכת חניכים במרכז הדאייה נגב - על מנת להשלים את הרישום עליך להעתיק את הקישור המצורף לשדה הכתובת בדפדפן: http://ancient-beyond-8896.herokuapp.com/login/%s"%token,
+			  "html": render_template('register_email.html',username=member, token=token, server='http://ancient-beyond-8896.herokuapp.com')})
 
 
 @app.route('/getop')
@@ -112,6 +131,17 @@ def readOperatios():
 	
 		return redirect(url_for('index'))
 		
+
+@app.route('/participants/<int:id>')
+def participants(id):
+    con = mdb['operations']
+    r = con.find_one({'_id':int(id)})
+    try:
+        users = mdb['users'].find({"username":{"$in":r['participate']}})
+        return render_template('participants.html', l = list(users))
+    except KeyError:
+        return '<div class="alert alert-info">אין משתתפים בפעולה זו</div>'
+
 @app.route('/mark_arrival', methods=['POST'])
 def arrival():
     id = request.form['id']
