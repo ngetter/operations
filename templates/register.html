@@ -72,27 +72,36 @@
     <p class="text-danger">{{ form.errors['plname'][0] }}</p>
     {% endif %}
     <label>שלב בהכשרה</label>
-    <div class="radio">
-      <label>
-        <input type="radio" name="status" id="status" value="חניך" checked>
+    <div class="btn-group" data-toggle="buttons">
+
+      <label class="btn btn-default">
+        <input  type="radio" name="status" id="status" value="חניך" checked>
         חניך
       </label>
-    </div>
-    <div class="radio">
-      <label>
+
+
+      <label class="btn btn-default">
         <input type="radio" name="status" id="status" value="סוליסט">
         סוליסט
       </label>
+  
+    
+      <label class="btn btn-default">
+        <input type="radio" name="status" id="status" value="אחר">
+        בעל רשיון (אחר)
+      </label>
+    
     </div>
     <!--
     <div class="recapcha-container" >
     {{ form.recaptcha }}
     </div>
     --> 
-    <div>
+  </fieldset>    
+    <div style="margin-top:15px;">
     <button type="submit" class="btn btn-large btn-primary">שלח</button>
     </div>
-  </fieldset>
+
 </form>
 {% endblock %}
 
