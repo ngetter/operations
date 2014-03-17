@@ -61,7 +61,7 @@
     
     <tr class='{{ buttonStatus.rowClass }}' id='{{ k._id }}'>
         <td width="20%">{{ k['date'].strftime('%d.%m') }}<br>{{ k['comment'] }}</td>
-        <td class='hidden-md hidden-xs hidden-sm' width='40%'><span>{{ k['instractor'] }}</span><br/><span>{{ k['incharge'] }}</span></td>
+        <td class=' hidden-xs ' width='40%'><span>{{ k['instractor'] }}</span><br/><span>{{ k['incharge'] }}</span></td>
         <td><a id="modal_a_{{ k['_id'] }}" class="modal-list" data-toggle="modal" data-target="#modal" href="participants/{{ k['_id'] }}"><strong>משתתפים&nbsp;<span class="badge badge-primary">{{ k['participate']|length }}</span></a></td>
         <td width="20%"><button type="button" class="btn {{ buttonStatus.buttonClass }} btn-xs btn-arrival" data-id="{{ k['_id'] }}"><span class="glyphicon {{ buttonStatus.glyph }}"></span>&nbsp;{{ buttonStatus.buttonCaption }}</button></td>
     </tr>
