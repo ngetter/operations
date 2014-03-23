@@ -28,6 +28,7 @@ MONGODB_PASSWORD  = 'dilk2d123'
 RECAPTCHA_PUBLIC_KEY = "6LcWKPASAAAAAN4dF2Qf7Ojyv6vpv4FvXFoxR6SC"
 RECAPTCHA_PRIVATE_KEY = "6LcWKPASAAAAAKpIVc_iPFM7T6xtyebNCplhIB5h"
 RECAPTCHA_OPTIONS = {"theme":"white"}
+
 app = Flask(__name__)
 app.config.from_object(__name__)
 
@@ -74,23 +75,23 @@ def logout():
 @app.route('/login/<get_token>', methods=['GET'])
 def token(get_token):
     if request.method == 'GET':
-        try:
+        try: #if the token is in the pool
             r = mdb['tokens'].find_one({"_id":get_token})
             user = mdb['users'].find_one({"username":r['user']['username']})
-            try:
+            try: #if the user already registered 
                 session['username'] = user['username']
                 session.permanent = True
-            except TypeError:
+            except TypeError: # the user is not regitered - should register him
             
                 session['username'] = r['user']['username']
                 session.permanent = True
-                mdb['users'].insert(r['user'])
+                mdb['users'].insert(r['user']) #register the user
             finally:
-                mdb['tokens'].remove(r)
+                mdb['tokens'].remove(r) #anyway delete the token
 
-        except TypeError:
+        except TypeError: #the provided token not exsist
             return render_template('token_unavaliable.html')
-
+            
         return redirect(url_for('index'))
 
     return "ERROR"
