@@ -8,6 +8,7 @@ from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired, Email
 
 from hashlib import sha224
+from json import dumps
 import time
 import requests
 import random
@@ -147,12 +148,12 @@ def arrival():
         if un in r['participate']:
             r['participate'].remove(un)
             con.save(r)
-            return 'nonpar'
+            return dumps({'participate':False, 'length':len(list(r['participate']))})
 
         else:
             r['participate'].append(un)
             con.save(r) 
-            return 'par'
+            return dumps({'participate':True, 'length':len(list(r['participate']))})
             
     except TypeError:
         return 'Type Error %s'%id
@@ -161,7 +162,7 @@ def arrival():
     except KeyError:
         r['participate'] = [un]
         con.save(r) 
-        return 'par'
+        return dumps({'participate':True, 'length':len(list(r['participate']))})
 
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
 	return ''.join(random.choice(chars) for x in range(size))        

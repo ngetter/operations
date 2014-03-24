@@ -4,20 +4,25 @@
 	$('.btn-arrival').click(function(){
 		var btn = $(this)
 		btn.button('loading');
+        
 		$.ajax({
 			method: 'POST',
 			url: 'mark_arrival',
+            dataType: 'json',
 			data: {id: btn.data('id'), username:'{{user.username}}'}
 			})
 			.done(function(str){
+                $('#length_' +  btn.data('id')).html(str.length);
                 btn.button('reset')
-                if(str=='par') {
+                if(str.participate==true) {
                     btn.html('<span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;משתתף');
                     btn.removeClass('btn-primary').addClass('btn-success');
+                    $('#' + btn.data('id')).removeClass('warning').addClass('success')
                     }
                 else {
                     btn.html('<span class="glyphicon glyphicon-thumbs-down"></span>&nbsp;לא משתתף');
                     btn.removeClass('btn-success').addClass('btn-primary');
+                    $('#' + btn.data('id')).removeClass('success').addClass('warning')
                     }
 				});
 
@@ -66,7 +71,7 @@
     <tr class='{{ buttonStatus.rowClass }}' id='{{ k._id }}'>
         <td width="20%">{{ k['date'].strftime('%d.%m') }}<br>{{ k['comment'] }}</td>
         <td class=' hidden-xs ' width='40%'><span>{{ k['instractor'] }}</span><br/><span>{{ k['incharge'] }}</span></td>
-        <td><a id="modal_a_{{ k['_id'] }}" class="modal-list" data-toggle="modal" data-target="#modal" href="participants/{{ k['_id'] }}"><strong>משתתפים&nbsp;<span class="badge badge-primary">{{ k['participate']|length }}</span></a></td>
+        <td><a id="modal_a_{{ k['_id'] }}" class="modal-list" data-toggle="modal" data-target="#modal" href="participants/{{ k['_id'] }}"><strong>משתתפים&nbsp;<span id='length_{{ k._id }}' class="badge badge-primary">{{ k['participate']|length }}</span></a></td>
         <td width="20%"><button type="button" class="btn {{ buttonStatus.buttonClass }} btn-xs btn-arrival" data-id="{{ k['_id'] }}"><span class="glyphicon {{ buttonStatus.glyph }}"></span>&nbsp;{{ buttonStatus.buttonCaption }}</button></td>
     </tr>
     {% endfor %}
