@@ -111,27 +111,20 @@ def register():
 @app.route('/mailgun')
 def mailgun():
 	r = send_simple_message('ngetter@gmail.com','Experiment','bla bla token bla')
-	return render_template('mailok.html', username='ngetter@gmail.com')
+	return render_template('mailok.html', username='ngetter@gmail.com',r=str(r))
 
 def send_simple_message(to, member, token):
     return requests.post(
         "https://api.mailgun.net/v2/nir.mailgun.org/messages",
         auth=("api", "key-6vcbt7a5dv8p754k3myvzqb5p8123ts5"),
+        files=[("inline", open("static/img/logo.jpg","rb"))],
         data={"from": "Nir Getter <ngetter@gmail.com>",
               "to": to,
               "subject": u"אימות רישום למערכת חניכים - מרכז דאייה נגב [%s]"%member,
               "text": u"נרשמת למערכת חניכים במרכז הדאייה נגב - על מנת להשלים את הרישום עליך להעתיק את הקישור המצורף לשדה הכתובת בדפדפן: http://ancient-beyond-8896.herokuapp.com/login/%s"%token,
-			  "html": render_template('register_email.html',username=member, token=token, server='http://ancient-beyond-8896.herokuapp.com')})
-
-
-@app.route('/getop')
-def readOperatios():
-    with open("operations.csv","r") as f:
-		df = csv.reader(f)
-		ops = [line for line in df]
-	
-		return redirect(url_for('index'))
-		
+			  "html": render_template('register_email.html',username=member, token=token, server='http://ancient-beyond-8896.herokuapp.com'),
+              "o:tag": "registration"
+              })
 
 @app.route('/participants/<int:id>')
 def participants(id):
