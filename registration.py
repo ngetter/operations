@@ -9,7 +9,7 @@ from wtforms.validators import DataRequired, Email
 
 from hashlib import sha224
 from json import dumps
-import time
+from datetime import datetime
 import requests
 import random
 import string
@@ -55,7 +55,7 @@ def index():
             return redirect(url_for('logout'))
                 
         col = mdb['operations']
-        l = list(col.find().sort("date",1).limit(12))
+        l = list(col.find({'date':{'$gte':datetime.now(None)}}).sort("date",1).limit(12))
         return render_template('main.html', l=l, user=r)	
     else:
         return redirect(url_for('register'))
