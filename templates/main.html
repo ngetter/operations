@@ -40,7 +40,7 @@
             }).done(function(str){$(".modal-content").html(str)});
     });
     
-    $('.addthisevent').popover()
+    //$('.addthisevent').popover()
 </script>
 
 {% block page_style %}
@@ -94,7 +94,7 @@ addthisevent.settings({
 </div>
 <div class="well">
 
-<h4>פעולות סוף השבוע הקרוב&nbsp;<small>לפעולות קודמות&nbsp;<a href="">לחץ כאן</a></small></h4>
+<h4>פעולות סוף השבוע הקרוב<!--&nbsp;<small>לפעולות קודמות&nbsp;<a href="">לחץ כאן</a></small>--></h4>
 
 <table class='table table-striped table-condensed' >
     {% for k in l[0:2] %}
