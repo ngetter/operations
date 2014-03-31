@@ -1,5 +1,5 @@
 ﻿import os
-from flask import Flask, Markup,  request, redirect, url_for, session, escape, render_template
+from flask import Flask, Markup,  request, redirect, url_for, session, escape, render_template, abort
 from flask.ext.mongokit import MongoKit
 
 from flask_wtf import Form,RecaptchaField
@@ -53,7 +53,9 @@ def index():
             r = users.find_one({'username':username})
         except TypeError:
             return redirect(url_for('logout'))
-                
+        except Exception:
+            abort(501)
+            
         col = mdb['operations']
         l = list(col.find({'date':{'$gte':datetime.now(None)}}).sort("date",1).limit(12))
         return render_template('main.html', l=l, user=r)	
