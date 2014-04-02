@@ -3,25 +3,32 @@
   <head>
 	{% block head %}
     <meta charset="utf-8">
-    <title>רישום לפעולה</title>
+    <title>{% block title %}רישום לפעולה{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
 
   {% endblock %}
+
   </head>
 
-  <body dir=rtl>
-	<table width="100%" height=200>
-	<tr><td width="100">
-	<img src="cid:logo.jpg" class="img-rounded pull-right" style="margin:3em">
-	</td>
-	<td>
-	{% block content %}{% endblock %}
-	</td>
-	</tr>
-	</table>
+<body dir=rtl style="background-color:lightgray;padding:2em 2em 2em 2em; margin: 2em 2em 2em 2em;">
+<div align="center">
+	<table width="70%" align="center" height=200 style="background-color:white;">
+        <tr>
+            <td>
+            <img src="cid:logo.jpg" style="margin:3em">
+            </td>
+        </tr>
+        
+        <tr>
+            <td style="padding:2em 2em 2em 2em;">
+            {% block content %}{% endblock %}
+            </td>
+        </tr>
+    </table>
+
 	{% block footer %}
 	{% endblock %}
-  </body>
+</body>
 </html>

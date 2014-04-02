@@ -15,6 +15,8 @@ import random
 import string
 import ast
 
+from logentries import LogentriesHandler
+import logging
 # configuration
 # MONGODB_HOST = '127.0.0.1'
 # MONGODB_PORT = 27017
@@ -37,6 +39,12 @@ app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
 mdb = MongoKit(app)                        
 
+
+logen = logging.getLogger('logentries')
+logen.setLevel(logging.INFO)
+# Note if you have set up the logentries handler in Django, the following line is not necessary
+logen.addHandler(LogentriesHandler('5ac1a243-662a-4f2c-910d-a57da29e38f4'))
+
 class frmRegistration(Form):
     username = TextField(u'דואר אלקטרוני', validators=[DataRequired(), Email([u'בשדה זה יש להקליד כתובת אימייל תקינה','has-error'])]) 
     #recaptcha = RecaptchaField()
@@ -51,9 +59,11 @@ def index():
         try:
             users = mdb['users']
             r = users.find_one({'username':username})
+            logen.info('%s logged in'%username)
         except TypeError:
             return redirect(url_for('logout'))
         except Exception:
+            logen.warn("abort(501)")
             abort(501)
             
         col = mdb['operations']
@@ -89,32 +99,35 @@ def token(get_token):
                 session['username'] = r['user']['username']
                 session.permanent = True
                 mdb['users'].insert(r['user']) #register the user
-            finally:
-                mdb['tokens'].remove(r) #anyway delete the token
-
+            else:
+                mdb['tokens'].remove({"_id":r['_id']}) #anyway delete the token
+                logen.info('%s logged in from email'%session['username'])
+                
         except TypeError: #the provided token not exsist
             return render_template('token_unavaliable.html')
             
         return redirect(url_for('index'))
-
-    return "ERROR"
+    logen.warn("abort(404)")
+    abort(404)
 	
 @app.route('/register', methods=['POST','GET'])
 def register():
     form = frmRegistration()
     if form.validate_on_submit():
         token = id_generator(size=40)
-        mdb['tokens'].insert([{"_id":token, "user":request.form.to_dict(flat=True)}])
+        mdb['tokens'].insert([{"_id":token, "user":request.form.to_dict(flat=True), "time":datetime.now()}])
         r = send_simple_message(request.form['username'],request.form['plname'], token )
-
+        logen.info('%s sent registration form'%(request.form['username']))
         return render_template('mailok.html', username=request.form['username'], plname=request.form['plname'])
+        
     else:
+        logen.info('annonymous redirected to registration form')
         return render_template('register.html', form=form)
 
 @app.route('/mailgun')
 def mailgun():
-	r = send_simple_message('ngetter@gmail.com','Experiment','bla bla token bla')
-	return render_template('mailok.html', username='ngetter@gmail.com',r=str(r))
+	r= send_simple_message('ngetter@gmail.com','Experiment','bla bla token bla')
+	return render_template('mailok.html', username='ngetter@gmail.com',r=0)
 
 def send_simple_message(to, member, token):
     return requests.post(
@@ -149,11 +162,13 @@ def arrival():
     try:
         if un in r['participate']:
             r['participate'].remove(un)
+            logen.info('%s chacked out from %s'%(session['username'],r['date']))
             con.save(r)
             return dumps({'participate':False, 'length':len(list(r['participate']))})
 
         else:
             r['participate'].append(un)
+            logen.info('%s chacked in to %s'%(session['username'],r['date']))
             con.save(r) 
             return dumps({'participate':True, 'length':len(list(r['participate']))})
             
