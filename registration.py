@@ -126,8 +126,17 @@ def register():
 
 @app.route('/mailgun')
 def mailgun():
-	r= send_simple_message('ngetter@gmail.com','Experiment','bla bla token bla')
-	return render_template('mailok.html', username='ngetter@gmail.com',r=0)
+    # return requests.post(
+        # "https://api.mailgun.net/v2/nir.mailgun.org/messages",
+        # auth=("api", "key-6vcbt7a5dv8p754k3myvzqb5p8123ts5"),
+        # files=[("inline", open("static/img/logo.jpg","rb"))],
+        # data={"from": "Nir Getter <ngetter@gmail.com>",
+              # "to": "ngetter@gmail.com",
+              # "subject": u"ניסוי מייל",
+              # "html": render_template('register_email.html',username=member, token=token, server='http://ancient-beyond-8896.herokuapp.com'),
+              # "o:tag": "self"
+              # })
+              return  render_template('register_from_email.html',username="ngetter@gmail.com", token="token bla bla", server='http://127.0.0.1:5000')#'http://ancient-beyond-8896.herokuapp.com')
 
 def send_simple_message(to, member, token):
     return requests.post(
@@ -180,6 +189,7 @@ def arrival():
         r['participate'] = [un]
         con.save(r) 
         return dumps({'participate':True, 'length':len(list(r['participate']))})
+
 
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
 	return ''.join(random.choice(chars) for x in range(size))        
