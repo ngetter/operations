@@ -6,22 +6,24 @@
     עד עכשיו נרשמו לפעולות סוף השבוע 2 חברים
     אם אתם חניכים או סוליסטים שמתכננים להגיע לאחת או יותר מהפעולות של סוף השבוע אבקש להרשם לפעולה באמצעות לחיצה מתאימה על הכפתור.
     אם אינכם  מתכוונים להגיע לאחת מפעולות סוף השבוע, אקש להקדיש דקה או שתים ולהרשם בכל זאת למערכת 
+    <table><tr>
+    <td>
     <div><!--[if mso]>
       <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="http://127.0.0.1:5000/mailgun" style="height:36px;v-text-anchor:middle;width:150px;" arcsize="50%" strokecolor="#e6e6e8" fillcolor="#95d85a">
         <w:anchorlock/>
         <center style="color:#2f353e;font-family:sans-serif;font-size:13px;font-weight:bold;">מגיע בשישי</center>
       </v:roundrect>
-    <![endif]--><a href="http://127.0.0.1:5000/mailgun"
+    <![endif]--><a href="{{ server }}/participate/{{ username }}/{{ operation[0] }}"
     style="background-color:#95d85a;border:1px solid #e6e6e8;border-radius:18px;color:#2f353e;display:inline-block;font-family:sans-serif;font-size:13px;font-weight:bold;line-height:36px;text-align:center;text-decoration:none;width:150px;-webkit-text-size-adjust:none;mso-hide:all;">מגיע בשישי</a>
     </div>
-    <br/>
+    </td><td>
      <div><!--[if mso]>
       <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="http://127.0.0.1:5000/mailgun" style="height:36px;v-text-anchor:middle;width:150px;" arcsize="50%" strokecolor="#e6e6e8" fillcolor="#f48810">
         <w:anchorlock/>
         <center style="color:#2f353e;font-family:sans-serif;font-size:13px;font-weight:bold;">מגיע בשבת</center>
       </v:roundrect>
-    <![endif]--><a href="http://127.0.0.1:5000/mailgun"
+    <![endif]--><a href="{{ server }}/participate/{{ username }}/{{ operation[1] }}"
     style="background-color:#f48810;border:1px solid #e6e6e8;border-radius:18px;color:#2f353e;display:inline-block;font-family:sans-serif;font-size:13px;font-weight:bold;line-height:36px;text-align:center;text-decoration:none;width:150px;-webkit-text-size-adjust:none;mso-hide:all;">מגיע בשבת</a>
     </div>
-    
+    </td></tr></table>
      {% endblock %}

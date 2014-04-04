@@ -137,7 +137,7 @@ addthisevent.settings({
     <tr class='{{ buttonStatus.rowClass }}' id='{{ k._id }}'>
         <td width="20%"><strong>{{ k['date'].strftime('%d.%m') }}</strong></br>{{ k['comment'] }}</td>
         <td class=' hidden-xs ' >
-            <a style="margin-top:8pt;" href="#" title="הוסף ליומן" data-container="body" data-toggle="popover" data-placement="top" 
+            <a style="margin-top:8pt;z-order:0;" href="#" title="הוסף ליומן" data-container="body" data-toggle="popover" data-placement="top" 
             data-content="עדכן מועד פעולה ביומן אישי." data-trigger="hover" class="addthisevent">
 
                 <span class="_start">{{ k['date'].strftime('%m-%d-%Y 08:30:00') }}</span>

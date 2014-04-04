@@ -1,5 +1,5 @@
 ﻿import os
-from flask import Flask, Markup,  request, redirect, url_for, session, escape, render_template, abort
+from flask import Flask, Markup,  request, redirect, url_for, session, escape, render_template, abort, send_from_directory
 from flask.ext.mongokit import MongoKit
 
 from flask_wtf import Form,RecaptchaField
@@ -9,7 +9,8 @@ from wtforms.validators import DataRequired, Email
 
 from hashlib import sha224
 from json import dumps
-from datetime import datetime
+from datetime import timedelta as td
+from datetime import datetime as dt
 import requests
 import random
 import string
@@ -17,16 +18,28 @@ import ast
 
 from logentries import LogentriesHandler
 import logging
-# configuration
-# MONGODB_HOST = '127.0.0.1'
-# MONGODB_PORT = 27017
-# MONGODB_DATABASE = 'test'
 
-MONGODB_HOST = 'troup.mongohq.com'
-MONGODB_PORT = 10001
-MONGODB_DATABASE = 'ngc-registration'
-MONGODB_USERNAME = 'nirg'
-MONGODB_PASSWORD  = 'dilk2d123'
+# configuration
+LOCAL=True
+MONGO_LOCAL = False
+if LOCAL:
+    SERVER_NAME = '127.0.0.1:5000'
+    RETURN_TO = 'http://192.168.2.105:5000'
+
+else:
+    #SERVER_NAME = r'http://ancient-beyond-8896.herokuapp.com:80'
+    RETURN_TO = r'http://ancient-beyond-8896.herokuapp.com'
+    
+if MONGO_LOCAL:
+    MONGODB_HOST = '127.0.0.1'
+    MONGODB_PORT = 27017
+    MONGODB_DATABASE = 'test'
+else:
+    MONGODB_HOST = 'troup.mongohq.com'
+    MONGODB_PORT = 10001
+    MONGODB_DATABASE = 'ngc-registration'
+    MONGODB_USERNAME = 'nirg'
+    MONGODB_PASSWORD  = 'dilk2d123'
 
 RECAPTCHA_PUBLIC_KEY = "6LcWKPASAAAAAN4dF2Qf7Ojyv6vpv4FvXFoxR6SC"
 RECAPTCHA_PRIVATE_KEY = "6LcWKPASAAAAAKpIVc_iPFM7T6xtyebNCplhIB5h"
@@ -49,7 +62,13 @@ class frmRegistration(Form):
     username = TextField(u'דואר אלקטרוני', validators=[DataRequired(), Email([u'בשדה זה יש להקליד כתובת אימייל תקינה','has-error'])]) 
     #recaptcha = RecaptchaField()
     plname = TextField(u'שם פרטי ושם משפחה', validators=[DataRequired(u'יש להקליד שם')])
+
     
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'),
+                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
+                               
 @app.route('/index')
 @app.route('/', methods=['POST','GET'])
 def index():
@@ -59,15 +78,15 @@ def index():
         try:
             users = mdb['users']
             r = users.find_one({'username':username})
-            logen.info('%s logged in'%username)
+            if LOCAL == False and username=="ngetter@gmail.com": logen.info('%s logged in'%username)
         except TypeError:
             return redirect(url_for('logout'))
         except Exception:
-            logen.warn("abort(501)")
+            if LOCAL == False: logen.warn("abort(501)")
             abort(501)
             
         col = mdb['operations']
-        l = list(col.find({'date':{'$gte':datetime.now(None)}}).sort("date",1).limit(12))
+        l = list(col.find({'date':{'$gte':dt.now(None)-td(2)}}).sort("date",1).limit(12))
         return render_template('main.html', l=l, user=r)	
     else:
         return redirect(url_for('register'))
@@ -126,28 +145,30 @@ def register():
 
 @app.route('/mailgun')
 def mailgun():
-    # return requests.post(
-        # "https://api.mailgun.net/v2/nir.mailgun.org/messages",
-        # auth=("api", "key-6vcbt7a5dv8p754k3myvzqb5p8123ts5"),
-        # files=[("inline", open("static/img/logo.jpg","rb"))],
-        # data={"from": "Nir Getter <ngetter@gmail.com>",
-              # "to": "ngetter@gmail.com",
-              # "subject": u"ניסוי מייל",
-              # "html": render_template('register_email.html',username=member, token=token, server='http://ancient-beyond-8896.herokuapp.com'),
-              # "o:tag": "self"
-              # })
-              return  render_template('register_from_email.html',username="ngetter@gmail.com", token="token bla bla", server='http://127.0.0.1:5000')#'http://ancient-beyond-8896.herokuapp.com')
+    requests.post(
+        "https://api.mailgun.net/v2/nir.mailgun.org/messages",
+        auth=("api", "key-6vcbt7a5dv8p754k3myvzqb5p8123ts5"),
+        files=[("inline", open("static/img/logo.jpg","rb"))],
+        data={"from": "Nir Getter <postmaster@nir.mailgun.org>",
+              "to": "ngetter@gmail.com",
+              "subject": u"ניסוי מייל",
+              "html": render_template('register_from_email.html',username="ngetter@gmail.com", token="token bla bla", operation = (1,2), server=RETURN_TO),
+              "o:tag": "self"
+              })
+    return render_template('mailok.html')
+    
+    #return  render_template('register_from_email.html',username="ngetter@gmail.com", token="token bla bla", operation = (1,2), server=RETURN_TO)
 
 def send_simple_message(to, member, token):
     return requests.post(
         "https://api.mailgun.net/v2/nir.mailgun.org/messages",
         auth=("api", "key-6vcbt7a5dv8p754k3myvzqb5p8123ts5"),
         files=[("inline", open("static/img/logo.jpg","rb"))],
-        data={"from": "Nir Getter <ngetter@gmail.com>",
+        data={"from": "Nir Getter <postmaster@nir.mailgun.org>",
               "to": to,
               "subject": u"אימות רישום למערכת חניכים - מרכז דאייה נגב [%s]"%member,
               "text": u"נרשמת למערכת חניכים במרכז הדאייה נגב - על מנת להשלים את הרישום עליך להעתיק את הקישור המצורף לשדה הכתובת בדפדפן: http://ancient-beyond-8896.herokuapp.com/login/%s"%token,
-			  "html": render_template('register_email.html',username=member, token=token, server='http://ancient-beyond-8896.herokuapp.com'),
+			  "html": render_template('register_email.html',username=member, token=token, server=RETURN_TO),
               "o:tag": "registration"
               })
 
