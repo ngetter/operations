@@ -82,8 +82,8 @@ def index():
         except TypeError:
             return redirect(url_for('logout'))
         except Exception:
-            if LOCAL == False: logen.warn("abort(501)")
-            abort(501)
+            if LOCAL == False: logen.warn("abort(404)")
+            abort(404)
             
         col = mdb['operations']
         l = list(col.find({'date':{'$gte':dt.now(None)-td(2)}}).sort("date",1).limit(12))
@@ -105,8 +105,8 @@ def logout():
     return redirect(url_for('index'))
     
 @app.route('/login/<get_token>', methods=['GET'])
-def token(get_token):
-    if request.method == 'GET':
+def login(get_token):
+    #if request.method == 'GET':
         try: #if the token is in the pool
             r = mdb['tokens'].find_one({"_id":get_token})
             user = mdb['users'].find_one({"username":r['user']['username']})
@@ -125,20 +125,21 @@ def token(get_token):
         except TypeError: #the provided token not exsist
             return render_template('token_unavaliable.html')
             
-        return redirect(url_for('index'))
-    logen.warn("abort(404)")
-    abort(404)
+        #return redirect(url_for('index'))
+    #logen.warn("abort(404)")
+    #abort(404)
 	
 @app.route('/register', methods=['POST','GET'])
 def register():
     form = frmRegistration()
     if form.validate_on_submit():
         token = id_generator(size=40)
-        mdb['tokens'].insert([{"_id":token, "user":request.form.to_dict(flat=True), "time":datetime.now()}])
-        r = send_simple_message(request.form['username'],request.form['plname'], token )
+        mdb['tokens'].insert([{"_id":token, "user":request.form.to_dict(flat=True), "time":dt.now()}])
+        login(token)
+        #r = send_simple_message(request.form['username'],request.form['plname'], token )
         logen.info('%s sent registration form'%(request.form['username']))
-        return render_template('mailok.html', username=request.form['username'], plname=request.form['plname'])
-        
+        #return render_template('mailok.html', username=request.form['username'], plname=request.form['plname'])
+        return redirect(url_for('index'))
     else:
         logen.info('annonymous redirected to registration form')
         return render_template('register.html', form=form)
