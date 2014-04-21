@@ -78,7 +78,7 @@ def index():
         try:
             users = mdb['users']
             r = users.find_one({'username':username})
-            if LOCAL == False and username=="ngetter@gmail.com": logen.info('%s logged in'%username)
+            if LOCAL == False and username !="ngetter@gmail.com": logen.info('%s logged in'%username)
         except TypeError:
             return redirect(url_for('logout'))
         except Exception:
