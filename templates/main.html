@@ -61,6 +61,8 @@
 .addthisevent 							{visibility:hidden;}
 
 </style>
+
+<link rel="stylesheet"  href="{{ url_for('static', filename='css/ios6toggle.css') }}">
 {% endblock %}
 <!-- AddThisEvent -->
 <script type="text/javascript" src="http://js.addthisevent.com/atemay.js"></script>
@@ -112,9 +114,10 @@ addthisevent.settings({
         <td width="20%"><strong>{{ k['date'].strftime('%d.%m') }}</strong><br>{{ k['comment'] }}</td>
         <td class=' hidden-xs ' width='40%'><span>{{ k['instractor'] }}</span><br/><span>{{ k['incharge'] }}</span></td>
         <td><a id="modal_a_{{ k['_id'] }}" class="modal-list" data-toggle="modal" data-target="#modal" href="participants/{{ k['_id'] }}"><strong>משתתפים&nbsp;<span id='length_{{ k._id }}' class="badge badge-primary">{{ k['participate']|length }}</span></a></td>
-        <td width="20%"><button type="button" class="btn {{ buttonStatus.buttonClass }} btn-xs btn-arrival" data-id="{{ k['_id'] }}"><span class="glyphicon {{ buttonStatus.glyph }}"></span>&nbsp;{{ buttonStatus.buttonCaption }}</button>
+        <td  ><button type="button" class="btn {{ buttonStatus.buttonClass }} btn-xs btn-arrival" data-id="{{ k['_id'] }}"><span class="glyphicon {{ buttonStatus.glyph }}"></span>&nbsp;{{ buttonStatus.buttonCaption }}</button>
 
         </td>
+
     </tr>
     {% endfor %}
 </table>

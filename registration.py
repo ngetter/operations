@@ -23,8 +23,8 @@ import logging
 LOCAL=False
 MONGO_LOCAL = False
 if LOCAL:
-    SERVER_NAME = '127.0.0.1:5000'
-    RETURN_TO = 'http://192.168.2.105:5000'
+    #SERVER_NAME = '127.0.0.1:5000'
+    RETURN_TO = 'http://127.0.0.1:5000'
 
 else:
     #SERVER_NAME = r'http://ancient-beyond-8896.herokuapp.com:80'
@@ -78,7 +78,8 @@ def index():
         try:
             users = mdb['users']
             r = users.find_one({'username':username})
-            if LOCAL == False and username !="ngetter@gmail.com": logen.info('%s logged in'%username)
+            session['plname'] = r['plname']
+            if LOCAL == False and username !="ngetter@gmail.com": logen.info('%s logged in'%r['plname'])
         except TypeError:
             return redirect(url_for('logout'))
         except Exception:
@@ -112,6 +113,7 @@ def login(get_token):
             user = mdb['users'].find_one({"username":r['user']['username']})
             try: #if the user already registered 
                 session['username'] = user['username']
+                session['plname'] = user['plname']
                 session.permanent = True
             except TypeError: # the user is not regitered - should register him
             
@@ -120,7 +122,7 @@ def login(get_token):
                 mdb['users'].insert(r['user']) #register the user
             else:
                 mdb['tokens'].remove({"_id":r['_id']}) #anyway delete the token
-                logen.info('%s logged in from email'%session['username'])
+                #logen.info('%s logged in from email'%session['username'])
                 
         except TypeError: #the provided token not exsist
             return render_template('token_unavaliable.html')
@@ -160,16 +162,23 @@ def mailgun():
     
     #return  render_template('register_from_email.html',username="ngetter@gmail.com", token="token bla bla", operation = (1,2), server=RETURN_TO)
 
-def send_simple_message(to, member, token):
+def sendRegMessage(to,member,id, opdate):
+    con = mdb['operations']
+    r = con.find_one({'_id':int(id)})
+    try:
+        users = mdb['users'].find({"username":{"$in":r['participate']}})
+    except KeyError:
+        users = []
+        
     return requests.post(
         "https://api.mailgun.net/v2/nir.mailgun.org/messages",
         auth=("api", "key-6vcbt7a5dv8p754k3myvzqb5p8123ts5"),
         files=[("inline", open("static/img/logo.jpg","rb"))],
-        data={"from": "Nir Getter <postmaster@nir.mailgun.org>",
+        data={"from": "מערכת רישום לפעולה - מדנ <postmaster@nir.mailgun.org>",
               "to": to,
-              "subject": u"אימות רישום למערכת חניכים - מרכז דאייה נגב [%s]"%member,
-              "text": u"נרשמת למערכת חניכים במרכז הדאייה נגב - על מנת להשלים את הרישום עליך להעתיק את הקישור המצורף לשדה הכתובת בדפדפן: http://ancient-beyond-8896.herokuapp.com/login/%s"%token,
-			  "html": render_template('register_email.html',username=member, token=token, server=RETURN_TO),
+              "subject": u"רישום לפעולה במרכז דאייה נגב [%s]"%member,
+              "text": u"נרשמת לפעולה במרכז הדאייה נגב ביום -  %s"%opdate,
+              "html": render_template('registeToOperation.html',username=member, id=id,opdate=opdate, users=list(users), server=RETURN_TO),
               "o:tag": "registration"
               })
 
@@ -184,37 +193,58 @@ def participants(id):
         return '<div class="alert alert-info">אין משתתפים בפעולה זו</div>'
 
 @app.route('/mark_arrival', methods=['POST'])
-def arrival():
-    id = request.form['id']
-    un = request.form['username']
+@app.route('/mark_arrival/<id>', methods=['GET'])
+def arrival(id = None):
+    print("arrival function %s"%request.method)
+    try:
+        un = escape(session['username'])
+    except:
+        return redirect(url_for('register'))
+        
+    if request.method=='POST':
+        id = request.form['id']
+        
+    
     #un = "ngc-registration@balistica.org"
     con = mdb['operations']
     r = con.find_one({'_id':int(id)})
+
     try:
         if un in r['participate']:
             r['participate'].remove(un)
+            print('%s chacked out from %s'%(session['username'],r['date']))
             logen.info('%s chacked out from %s'%(session['username'],r['date']))
             con.save(r)
-            return dumps({'participate':False, 'length':len(list(r['participate']))})
-
+            if request.method == 'POST':
+                return dumps({'participate':False, 'length':len(list(r['participate']))})
+            else:
+                return render_template('unregisterConfirm.html',opdate=r['date'], plname=session['plname'])
         else:
             r['participate'].append(un)
+
             logen.info('%s chacked in to %s'%(session['username'],r['date']))
-            con.save(r) 
-            return dumps({'participate':True, 'length':len(list(r['participate']))})
+            sendRegMessage(session['username'],session['plname'],id, r['date'])
+            print('%s chacked in to %s'%(session['username'],r['date']))
+            con.save(r)
+            if request.method=='POST':
+                return dumps({'participate':True, 'length':len(list(r['participate']))})
+            else:
+                return 'נוסף לרשימת המשתתפים בפעולה'
             
     except TypeError:
-        return 'Type Error %s'%id
+        logen.error('Type Error in arrival() [/%s] %s'%(request.method,id))
+        print('Type Error in arrival() [/%s] %s'%(request.method,id))
+        abort(404)
     except ValueError:
         return 'ValueError'
     except KeyError:
+        print('KeyError')
         r['participate'] = [un]
         con.save(r) 
         return dumps({'participate':True, 'length':len(list(r['participate']))})
-
-
+        
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
-	return ''.join(random.choice(chars) for x in range(size))        
-	
+    return ''.join(random.choice(chars) for x in range(size))        
+    
 if __name__ == "__main__":
-	app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0')
