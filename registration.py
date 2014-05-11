@@ -133,18 +133,21 @@ def login(get_token):
 	
 @app.route('/register', methods=['POST','GET'])
 def register():
-    form = frmRegistration()
-    if form.validate_on_submit():
-        token = id_generator(size=40)
-        mdb['tokens'].insert([{"_id":token, "user":request.form.to_dict(flat=True), "time":dt.now()}])
-        login(token)
-        #r = send_simple_message(request.form['username'],request.form['plname'], token )
-        logen.info('%s sent registration form'%(request.form['username']))
-        #return render_template('mailok.html', username=request.form['username'], plname=request.form['plname'])
+    if 'username' in session:
         return redirect(url_for('index'))
     else:
-        logen.info('annonymous redirected to registration form')
-        return render_template('register.html', form=form)
+        form = frmRegistration()
+        if form.validate_on_submit():
+            token = id_generator(size=40)
+            mdb['tokens'].insert([{"_id":token, "user":request.form.to_dict(flat=True), "time":dt.now()}])
+            login(token)
+            #r = send_simple_message(request.form['username'],request.form['plname'], token )
+            logen.info('%s sent registration form'%(request.form['username']))
+            #return render_template('mailok.html', username=request.form['username'], plname=request.form['plname'])
+            return redirect(url_for('index'))
+        else:
+            logen.info('annonymous redirected to registration form')
+            return render_template('register.html', form=form)
 
 @app.route('/mailgun')
 def mailgun():
