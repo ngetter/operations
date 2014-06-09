@@ -143,7 +143,7 @@ def register():
             mdb['tokens'].insert([{"_id":token, "user":request.form.to_dict(flat=True), "time":dt.now()}])
             login(token)
             #r = send_simple_message(request.form['username'],request.form['plname'], token )
-            logen.info('%s sent registration form'%(request.form['username']))
+            logen.info('%s [%s] sent registration form'%(request.form['plname'],request.form['username']))
             #return render_template('mailok.html', username=request.form['username'], plname=request.form['plname'])
             return redirect(url_for('index'))
         else:
