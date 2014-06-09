@@ -134,6 +134,7 @@ def login(get_token):
 @app.route('/register', methods=['POST','GET'])
 def register():
     if 'username' in session:
+        logen.info('%s using registration form when already registered'%(request.form['username']))
         return redirect(url_for('index'))
     else:
         form = frmRegistration()
@@ -196,7 +197,7 @@ def participants(id):
         return '<div class="alert alert-info">אין משתתפים בפעולה זו</div>'
 
 @app.route('/mark_arrival', methods=['POST'])
-@app.route('/mark_arrival/<id>', methods=['GET'])
+@app.route('/mark_arrival/<int:id>', methods=['GET'])
 def arrival(id = None):
     print("arrival function %s"%request.method)
     try:
@@ -207,7 +208,6 @@ def arrival(id = None):
     if request.method=='POST':
         id = request.form['id']
         
-    
     #un = "ngc-registration@balistica.org"
     con = mdb['operations']
     r = con.find_one({'_id':int(id)})
@@ -243,6 +243,8 @@ def arrival(id = None):
     except KeyError:
         print('KeyError')
         r['participate'] = [un]
+        logen.info('%s chacked in to %s'%(session['username'],r['date']))
+        sendRegMessage(session['username'],session['plname'],id, r['date'])
         con.save(r) 
         return dumps({'participate':True, 'length':len(list(r['participate']))})
         

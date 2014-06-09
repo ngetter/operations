@@ -1,6 +1,10 @@
 ﻿{% extends "base.html" %}
 {% block script %}
 <script>
+    $.fn.editable.defaults.mode = 'popup';
+    $(document).ready(function() {
+        $('.txt-comment').editable();
+            }); 
 	$('.btn-arrival').click(function(){
 		var btn = $(this)
 		btn.button('loading');
@@ -26,9 +30,17 @@
                     }
 				});
 
-				
+	});
 
+	$('.txt-message').click(function(){
+		var btn = $(this)
 
+		$.ajax({
+			method: 'POST',
+			url: 'add_message',
+            dataType: 'json',
+			data: {id: btn.data('id'), username:'{{user.username}}'}
+			})
 	});
     
     $('.modal-list').click(function(){
@@ -103,19 +115,24 @@ addthisevent.settings({
     {% if k.participate %}
         {% if user.username not in k.participate  %}
             {% set buttonStatus = {'buttonClass':'btn-primary','buttonCaption':'לא משתתף', 'rowClass':'warning', 'glyph':'glyphicon-thumbs-down'} %}
+            {% set btnMesage = {'buttonClass':'hidden'} %}
         {% else %}
             {% set buttonStatus = {'buttonClass':'btn-success','buttonCaption':'משתתף', 'rowClass':'success', 'glyph':'glyphicon-thumbs-up'} %}
+            {% set btnMesage = {'buttonClass':''} %}
         {% endif %}
     {% else %}
         {% set buttonStatus = {'buttonClass':'btn-primary','buttonCaption':'לא משתתף', 'rowClass':'warning', 'glyph':'glyphicon-thumbs-down'} %}
+        {% set btnMesage = {'buttonClass':'hidden'} %}
     {% endif %}
     
-    <tr class='{{ buttonStatus.rowClass }}' id='{{ k._id }}'>
+    <tr class='{{ buttonStatus.rowClass }}' id='{{ k._id | int}}'>
         <td width="20%"><strong>{{ k['date'].strftime('%d.%m') }}</strong><br>{{ k['comment'] }}</td>
         <td class=' hidden-xs ' width='40%'><span>{{ k['instractor'] }}</span><br/><span>{{ k['incharge'] }}</span></td>
-        <td><a id="modal_a_{{ k['_id'] }}" class="modal-list" data-toggle="modal" data-target="#modal" href="participants/{{ k['_id'] }}"><strong>משתתפים&nbsp;<span id='length_{{ k._id }}' class="badge badge-primary">{{ k['participate']|length }}</span></a></td>
-        <td  ><button type="button" class="btn {{ buttonStatus.buttonClass }} btn-xs btn-arrival" data-id="{{ k['_id'] }}"><span class="glyphicon {{ buttonStatus.glyph }}"></span>&nbsp;{{ buttonStatus.buttonCaption }}</button>
-
+        <td><a id="modal_a_{{ k._id | int}}" class="modal-list" data-toggle="modal" data-target="#modal" href="participants/{{ k._id | int}}"><strong>משתתפים&nbsp;<span id='length_{{ k._id | int }}' class="badge badge-primary">{{ k['participate']|length }}</span></a></td>
+        <td><!-- <a href="#" class="txt-comment" id="comment" data-type="text" data-pk="1" data-url="/post" data-title="Enter username">הערה</a> -->
+        <button type="button" class="btn {{ buttonStatus.buttonClass }} btn-sm btn-arrival" data-id="{{ k._id | int }}"><span class="glyphicon {{ buttonStatus.glyph }}"></span>&nbsp;{{ buttonStatus.buttonCaption }}</button>
+        </div>
+        </td>
         </td>
 
     </tr>
@@ -137,7 +154,7 @@ addthisevent.settings({
         {% set buttonStatus = {'buttonClass':'btn-primary','buttonCaption':'לא משתתף', 'rowClass':'warning', 'glyph':'glyphicon-thumbs-down'} %}
     {% endif %}
     
-    <tr class='{{ buttonStatus.rowClass }}' id='{{ k._id }}'>
+    <tr class='{{ buttonStatus.rowClass }}' id='{{ k._id | int }}'>
         <td width="20%"><strong>{{ k['date'].strftime('%d.%m') }}</strong></br>{{ k['comment'] }}</td>
         <td class=' hidden-xs ' >
             <a style="margin-top:8pt;z-order:0;" href="#" title="הוסף ליומן" data-container="body" data-toggle="popover" data-placement="top" 
@@ -154,8 +171,8 @@ addthisevent.settings({
         </td>
         <td class=' hidden-xs ' width='40%'><span>{{ k['instractor'] }}</span><br/><span>{{ k['incharge'] }}</span>
         </td>
-        <td><a id="modal_a_{{ k['_id'] }}" class="modal-list" data-toggle="modal" data-target="#modal" href="participants/{{ k['_id'] }}"><strong>משתתפים&nbsp;<span id='length_{{ k._id }}' class="badge badge-primary">{{ k['participate']|length }}</span></a></td>
-        <td width="20%"><button type="button" class="btn {{ buttonStatus.buttonClass }} btn-xs btn-arrival" data-id="{{ k['_id'] }}"><span class="glyphicon {{ buttonStatus.glyph }}"></span>&nbsp;{{ buttonStatus.buttonCaption }}</button>
+        <td><a id="modal_a_{{ k._id | int }}" class="modal-list" data-toggle="modal" data-target="#modal" href="participants/{{ k._id | int }}"><strong>משתתפים&nbsp;<span id='length_{{ k._id | int }}' class="badge badge-primary">{{ k['participate']|length }}</span></a></td>
+        <td width="20%"><button type="button" class="btn {{ buttonStatus.buttonClass }} btn-xs btn-arrival" data-id="{{ k._id | int }}"><span class="glyphicon {{ buttonStatus.glyph }}"></span>&nbsp;{{ buttonStatus.buttonCaption }}</button>
 
         </td>
     </tr>
