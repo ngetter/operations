@@ -7,7 +7,7 @@
             }); 
 	$('.btn-arrival').click(function(){
 		var btn = $(this)
-		btn.button('loading');
+		btn.button('loading').append('<span style="margin-right:0.5em" class="fa fa-circle-o-notch fa-spin"></span>');
         
 		$.ajax({
 			method: 'POST',
@@ -127,10 +127,10 @@ addthisevent.settings({
     
     <tr class='{{ buttonStatus.rowClass }}' id='{{ k._id | int}}'>
         <td width="20%"><strong>{{ k['date'].strftime('%d.%m') }}</strong><br>{{ k['comment'] }}</td>
-        <td class=' hidden-xs ' width='40%'><span>{{ k['instractor'] }}</span><br/><span>{{ k['incharge'] }}</span></td>
+        <td class=' hidden-xs ' width='20%'><span>{{ k['instractor'] }}</span><br/><span>{{ k['incharge'] }}</span></td>
         <td><a id="modal_a_{{ k._id | int}}" class="modal-list" data-toggle="modal" data-target="#modal" href="participants/{{ k._id | int}}"><strong>משתתפים&nbsp;<span id='length_{{ k._id | int }}' class="badge badge-primary">{{ k['participate']|length }}</span></a></td>
         <td><!-- <a href="#" class="txt-comment" id="comment" data-type="text" data-pk="1" data-url="/post" data-title="Enter username">הערה</a> -->
-        <button type="button" class="btn {{ buttonStatus.buttonClass }} btn-sm btn-arrival" data-id="{{ k._id | int }}"><span class="glyphicon {{ buttonStatus.glyph }}"></span>&nbsp;{{ buttonStatus.buttonCaption }}</button>
+        <button type="button" style="width:8em;" class="btn {{ buttonStatus.buttonClass }} btn-sm btn-arrival" data-id="{{ k._id | int }}"><span class="glyphicon {{ buttonStatus.glyph }}"></span>&nbsp;{{ buttonStatus.buttonCaption }}</button>
         </div>
         </td>
         </td>
@@ -155,7 +155,7 @@ addthisevent.settings({
     {% endif %}
     
     <tr class='{{ buttonStatus.rowClass }}' id='{{ k._id | int }}'>
-        <td width="20%"><strong>{{ k['date'].strftime('%d.%m') }}</strong></br>{{ k['comment'] }}</td>
+        <td width="8%"><strong>{{ k['date'].strftime('%d.%m') }}</strong></br>{{ k['comment'] }}</td>
         <td class=' hidden-xs ' >
             <a style="margin-top:8pt;z-order:0;" href="#" title="הוסף ליומן" data-container="body" data-toggle="popover" data-placement="top" 
             data-content="עדכן מועד פעולה ביומן אישי." data-trigger="hover" class="addthisevent">
@@ -169,10 +169,10 @@ addthisevent.settings({
                 <span class="_date_format">MM/DD/YYYY</span>
             </a> 
         </td>
-        <td class=' hidden-xs ' width='40%'><span>{{ k['instractor'] }}</span><br/><span>{{ k['incharge'] }}</span>
+        <td class=' hidden-xs ' width='20%'><span>{{ k['instractor'] }}</span><br/><span>{{ k['incharge'] }}</span>
         </td>
         <td><a id="modal_a_{{ k._id | int }}" class="modal-list" data-toggle="modal" data-target="#modal" href="participants/{{ k._id | int }}"><strong>משתתפים&nbsp;<span id='length_{{ k._id | int }}' class="badge badge-primary">{{ k['participate']|length }}</span></a></td>
-        <td width="20%"><button type="button" class="btn {{ buttonStatus.buttonClass }} btn-xs btn-arrival" data-id="{{ k._id | int }}"><span class="glyphicon {{ buttonStatus.glyph }}"></span>&nbsp;{{ buttonStatus.buttonCaption }}</button>
+        <td width="31%"><button type="button" style="width:8em;" class="btn {{ buttonStatus.buttonClass }} btn-sm btn-arrival" data-loading-text="טוען..." data-id="{{ k._id | int }}"><span class="glyphicon {{ buttonStatus.glyph }}"></span>&nbsp;{{ buttonStatus.buttonCaption }}</button>
 
         </td>
     </tr>
