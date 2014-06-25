@@ -6,6 +6,7 @@ from flask_wtf import Form,RecaptchaField
 from wtforms import TextField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired, Email
+from bson.objectid import ObjectId
 
 from hashlib import sha224
 from json import dumps
@@ -168,7 +169,7 @@ def mailgun():
 
 def sendRegMessage(to,member,id, opdate):
     con = mdb['operations']
-    r = con.find_one({'_id':int(id)})
+    r = con.find_one({'_id':ObjectId(id)})
     try:
         users = mdb['users'].find({"username":{"$in":r['participate']}})
     except KeyError:
@@ -192,7 +193,7 @@ def participants(id):
     r = con.find_one({'_id':int(id)})
     try:
         users = mdb['users'].find({"username":{"$in":r['participate']}})
-        return render_template('participants.html', l = list(users))
+        return render_template('participants.html', l = list(users), operation=r)
     except KeyError:
         return '<div class="alert alert-info">אין משתתפים בפעולה זו</div>'
 
@@ -210,7 +211,7 @@ def arrival(id = None):
         
     #un = "ngc-registration@balistica.org"
     con = mdb['operations']
-    r = con.find_one({'_id':int(id)})
+    r = con.find_one({'_id':ObjectId(id)})
 
     try:
         if un in r['participate']:
@@ -247,9 +248,48 @@ def arrival(id = None):
         sendRegMessage(session['username'],session['plname'],id, r['date'])
         con.save(r) 
         return dumps({'participate':True, 'length':len(list(r['participate']))})
-        
+
+@app.route('/tables/<collection>')
+def tables(collection):
+    tor=mdb[collection]
+    l = list(tor.find({}).sort("_id",1))
+    return render_template('%s/index.html'%collection, l=l)
+
+    
+@app.route('/update', methods=['POST'])
+def update():
+    id = request.form['pk']
+    newname = request.form['value']
+    colection, fname = request.form['name'].split("/")
+    try:
+        tor=mdb[colection]
+        r = tor.find_one({'_id':int(id)})
+
+        r[fname] = newname
+        tor.save(r)
+        return "True"
+    except TypeError:
+        return "Type Error %s"%id
+    
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for x in range(size))        
-    
+
+@app.template_filter('emptysign')
+def emptysign(value):
+    if value:
+        return value
+    else:
+        return Markup("<i class='fa fa-exclamation-triangle'></i>")
+
+@app.template_filter('mytor')
+def mytor(value, position):
+    if value:
+        if position >= int(value):
+            return position - int(value) + 1
+        else:
+            return 64 - int(value) + position +  + 1
+    else:
+        return Markup("<i class='fa fa-exclamation-triangle'></i>")
+        
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')

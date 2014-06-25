@@ -1,13 +1,20 @@
 ﻿{% extends "base.html" %}
 {% block script %}
 <script>
+
     $.fn.editable.defaults.mode = 'popup';
     $(document).ready(function() {
-        $('.txt-comment').editable();
-            }); 
+        $('.editable').editable({
+            type: 'text',
+            //name: 'operations/instructor',
+            url: '/update',
+            title: 'בחר שם אחר'
+        });
+    }); 
+    
 	$('.btn-arrival').click(function(){
 		var btn = $(this)
-		btn.button('loading').append('<span style="margin-right:0.5em" class="fa fa-circle-o-notch fa-spin"></span>');
+		btn.button('loading').append('<span style="margin-right:0.5em" class="fa fa-circle-o-notch fa-spin pull-left"></span>');
         
 		$.ajax({
 			method: 'POST',
@@ -53,45 +60,15 @@
     });
     
     //$('.addthisevent').popover()
+
+
+
+    
 </script>
+{% endblock %}
 
 {% block page_style %}
-<style type="text/css">
-
-.addthisevent-drop 						{width:27px;height:23px;display:inline-block;position:relative;z-index:3;font-family:arial;color:#333;text-decoration:none;font-size:14px;text-decoration:none;background:url(/static/img/icon-calendar.png) no-repeat;}
-.addthisevent-drop:hover 				{color:#555;font-size:14px;text-decoration:none;}
-.addthisevent-selected 					{}
-.addthisevent_dropdown 					{width:200px;position:absolute;z-index:3;padding:6px 0px 0px 0px;background:#fff;text-align:left;display:none;margin-top:4px;margin-left:-1px;border-top:1px solid #c8c8c8;border-right:1px solid #bebebe;border-bottom:1px solid #a8a8a8;border-left:1px solid #bebebe;-moz-border-radius:2px;-webkit-border-radius:2px;-webkit-box-shadow:1px 3px 6px rgba(0,0,0,0.15);-moz-box-shadow:1px 3px 6px rgba(0,0,0,0.15);box-shadow:1px 3px 6px rgba(0,0,0,0.15);}
-.addthisevent_dropdown span 			{width:175px;display:block;line-height:110%;background:#fff;text-decoration:none;font-size:12px;color:#6d84b4;padding:8px 10px 9px 15px;}
-.addthisevent_dropdown span:hover 		{background:#f4f4f4;color:#6d84b4;text-decoration:none;font-size:12px;}
-.addthisevent span 						{display:none!important;}
-.addthisevent-drop ._url,.addthisevent-drop ._start,.addthisevent-drop ._end,.addthisevent-drop ._summary,.addthisevent-drop ._description,.addthisevent-drop ._location,.addthisevent-drop ._organizer,.addthisevent-drop ._organizer_email,.addthisevent-drop ._facebook_event,.addthisevent-drop ._all_day_event {display:none!important;}
-.addthisevent_dropdown .copyx 			{width:200px;height:21px;display:block;position:relative;cursor:default;}
-.addthisevent_dropdown .brx 			{width:180px;height:1px;overflow:hidden;background:#e0e0e0;position:absolute;z-index:2;left:10px;top:9px;}
-.addthisevent_dropdown .frs 			{position:absolute;top:5px;cursor:pointer;right:10px;padding-left:10px;font-style:normal;font-weight:normal;text-align:right;z-index:3;line-height:110%;background:#fff;text-decoration:none;font-size:9px;color:#cacaca;}
-.addthisevent_dropdown .frs:hover 		{color:#6d84b4;}
-.addthisevent 							{visibility:hidden;}
-
-</style>
-
 <link rel="stylesheet"  href="{{ url_for('static', filename='css/ios6toggle.css') }}">
-{% endblock %}
-<!-- AddThisEvent -->
-<script type="text/javascript" src="http://js.addthisevent.com/atemay.js"></script>
-<!-- AddThisEvent Settings -->
-<script type="text/javascript">
-addthisevent.settings({
-	mouse		: false,
-	css			: false,
-	outlook		: {show:true, text:"הוסף לאאוטלוק"},
-	google		: {show:true, text:"הוסף ליומן גוגל"},
-	yahoo		: {show:true, text:"הוסף ליומן יאהו"},
-	ical		: {show:false, text:"iCal Calendar"},
-	hotmail		: {show:true, text:"הוסף ליומן הוטמייל"},
-	facebook	: {show:false, text:"Facebook Calendar"}
-});
-</script>
-
 {% endblock %}
 
 {% block content %}
@@ -106,11 +83,12 @@ addthisevent.settings({
     </div>
   </div>
 </div>
-<div class="well">
 
+<div class="page-header">
 <h4>פעולות סוף השבוע הקרוב<!--&nbsp;<small>לפעולות קודמות&nbsp;<a href="">לחץ כאן</a></small>--></h4>
+</div>
 
-<table class='table table-striped table-condensed' >
+<table id="operations" class='table table-striped table-condensed' >
     {% for k in l[0:2] %}
     {% if k.participate %}
         {% if user.username not in k.participate  %}
@@ -125,20 +103,44 @@ addthisevent.settings({
         {% set btnMesage = {'buttonClass':'hidden'} %}
     {% endif %}
     
-    <tr class='{{ buttonStatus.rowClass }}' id='{{ k._id | int}}'>
-        <td width="20%"><strong>{{ k['date'].strftime('%d.%m') }}</strong><br>{{ k['comment'] }}</td>
-        <td class=' hidden-xs ' width='20%'><span>{{ k['instractor'] }}</span><br/><span>{{ k['incharge'] }}</span></td>
-        <td><a id="modal_a_{{ k._id | int}}" class="modal-list" data-toggle="modal" data-target="#modal" href="participants/{{ k._id | int}}"><strong>משתתפים&nbsp;<span id='length_{{ k._id | int }}' class="badge badge-primary">{{ k['participate']|length }}</span></a></td>
-        <td><!-- <a href="#" class="txt-comment" id="comment" data-type="text" data-pk="1" data-url="/post" data-title="Enter username">הערה</a> -->
-        <button type="button" style="width:8em;" class="btn {{ buttonStatus.buttonClass }} btn-sm btn-arrival" data-id="{{ k._id | int }}"><span class="glyphicon {{ buttonStatus.glyph }}"></span>&nbsp;{{ buttonStatus.buttonCaption }}</button>
-        </div>
+    <tr class='{{ buttonStatus.rowClass }}' id='{{ k._id }}'>
+        <td ><span class="pull-right"><strong>{{ k['date'].strftime('%d.%m') }}</strong><br>{{ k['comment'] }}</span>
+        {% if user.position %}
+        <span  style="font-size:1.2em;margin-right:0.3em;" class="label label-success pull-right">{{ k['first'] | mytor(user['position'] | int )}}</span>
+        {% else %}
+        <a  href="#" style="font-size:1.2em;margin-right:0.3em;" class="label label-success pull-right editable" data-pk="{{user.username}}" data-name="users/position">{{ user['position'] | emptysign }}</a>
+        {% endif %}
+        
         </td>
+
+        <td class="hidden-xs">
+            <a class="editable" href="#" 
+                data-pk="{{k._id}}"
+                data-name="operations/instructor">{{ k['instractor'] }}</a><br/>
+            <a class="editable" href="#" 
+                data-pk="{{k._id}}" 
+                data-name="operations/incharge">{{ k['incharge'] }}</a>
+            
+<!--             <a class="editable" href="#" 
+                data-pk="{{k._id}}" 
+                data-name="operations/first">{{ k['first'] }}</a> -->
+        </td>        
+        <td><!-- <a href="#" class="txt-comment" id="comment" data-type="text" data-pk="1" data-url="/post" data-title="Enter username">הערה</a> -->
+            <button type="button" style="width:8em;" class="btn {{ buttonStatus.buttonClass }} btn-arrival btn-sm" data-id="{{ k._id  }}">
+                <span class="glyphicon {{ buttonStatus.glyph }}"></span>&nbsp;{{ buttonStatus.buttonCaption }}
+            </button>
+        </td>
+        <td>
+            <button type="button" class="btn btn-link modal-list pull-left" id="modal_a_{{ k._id }}" data-toggle="modal" data-target="#modal" href="participants/{{ k._id }}">
+                <span id='length_{{ k._id  }}' class="badge badge-primary">{{ k['participate']|length }}</span>
+                <i class="fa fa-chevron-left"></i>        
+            </a>
         </td>
 
     </tr>
     {% endfor %}
 </table>
-</div>
+
 <div class="page-header">
 <h4>פעולות נוספות</h4>
 </div>
@@ -154,26 +156,29 @@ addthisevent.settings({
         {% set buttonStatus = {'buttonClass':'btn-primary','buttonCaption':'לא משתתף', 'rowClass':'warning', 'glyph':'glyphicon-thumbs-down'} %}
     {% endif %}
     
-    <tr class='{{ buttonStatus.rowClass }}' id='{{ k._id | int }}'>
-        <td width="8%"><strong>{{ k['date'].strftime('%d.%m') }}</strong></br>{{ k['comment'] }}</td>
-        <td class=' hidden-xs ' >
-            <a style="margin-top:8pt;z-order:0;" href="#" title="הוסף ליומן" data-container="body" data-toggle="popover" data-placement="top" 
-            data-content="עדכן מועד פעולה ביומן אישי." data-trigger="hover" class="addthisevent">
-
-                <span class="_start">{{ k['date'].strftime('%m-%d-%Y 08:30:00') }}</span>
-                <span class="_end">{{ k['date'].strftime('%m-%d-%Y 17:00:00') }}</span>
-                <span class="_summary">פעולת דאייה בתימן</span>
-                <span class="_description"><span>מדריך:{{ k['instractor'] }}</span><br/><span>אחראי בשדה:{{ k['incharge'] }}</span></span>
-                <span class="_zonecode">52</span>
-                <span class="_all_day_event">false</span>
-                <span class="_date_format">MM/DD/YYYY</span>
-            </a> 
+    <tr class='{{ buttonStatus.rowClass }}' id='{{ k._id }}'>
+        <td ><span class="pull-right"><strong>{{ k['date'].strftime('%d.%m') }}</strong><br>{{ k['comment'] }}</span>
+        <span  style="font-size:1.2em;margin-right:0.3em;" class="label label-success pull-right">{{ k['first'] | mytor(user['position'] | int) }}</span>
         </td>
-        <td class=' hidden-xs ' width='20%'><span>{{ k['instractor'] }}</span><br/><span>{{ k['incharge'] }}</span>
-        </td>
-        <td><a id="modal_a_{{ k._id | int }}" class="modal-list" data-toggle="modal" data-target="#modal" href="participants/{{ k._id | int }}"><strong>משתתפים&nbsp;<span id='length_{{ k._id | int }}' class="badge badge-primary">{{ k['participate']|length }}</span></a></td>
-        <td width="31%"><button type="button" style="width:8em;" class="btn {{ buttonStatus.buttonClass }} btn-sm btn-arrival" data-loading-text="טוען..." data-id="{{ k._id | int }}"><span class="glyphicon {{ buttonStatus.glyph }}"></span>&nbsp;{{ buttonStatus.buttonCaption }}</button>
 
+        <td class="hidden-xs">
+            <a class="editable" href="#" 
+                data-pk="{{k._id}}"
+                data-name="operations/instructor">{{ k['instractor'] }}</a><br/>
+            <a class="editable" href="#" 
+                data-pk="{{k._id}}" 
+                data-name="operations/incharge">{{ k['incharge'] }}</a>
+            
+<!--             <a class="editable" href="#" 
+                data-pk="{{k._id}}" 
+                data-name="operations/first">{{ k['first'] | emptysign }}</a> -->
+        </td>
+        <td width="31%"><button type="button" style="width:8em;" class="btn {{ buttonStatus.buttonClass }} btn-sm btn-arrival pull-right" data-loading-text="טוען..." data-id="{{ k._id  }}"><span class="glyphicon {{ buttonStatus.glyph }} pull-right"></span>&nbsp;{{ buttonStatus.buttonCaption }}</button>
+        <td>
+            <button type="button" class="btn btn-link modal-list pull-left" id="modal_a_{{ k._id }}" data-toggle="modal" data-target="#modal" href="participants/{{ k._id }}">
+                <span id='length_{{ k._id  }}' class="badge badge-primary">{{ k['participate']|length }}</span>
+                <i class="fa fa-chevron-left"></i>        
+            </a>
         </td>
     </tr>
     {% endfor %}
