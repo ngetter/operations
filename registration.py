@@ -187,10 +187,10 @@ def sendRegMessage(to,member,id, opdate):
               "o:tag": "registration"
               })
 
-@app.route('/participants/<int:id>')
+@app.route('/participants/<ObjectId:id>')
 def participants(id):
     con = mdb['operations']
-    r = con.find_one({'_id':int(id)})
+    r = con.find_one({'_id':ObjectId(id)})
     try:
         users = mdb['users'].find({"username":{"$in":r['participate']}})
         return render_template('participants.html', l = list(users), operation=r)
