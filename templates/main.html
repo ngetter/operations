@@ -158,7 +158,11 @@
     
     <tr class='{{ buttonStatus.rowClass }}' id='{{ k._id }}'>
         <td ><span class="pull-right"><strong>{{ k['date'].strftime('%d.%m') }}</strong><br>{{ k['comment'] }}</span>
-        <span  style="font-size:1.2em;margin-right:0.3em;" class="label label-success pull-right">{{ k['first'] | mytor(user['position'] | int) }}</span>
+        {% if user.position %}
+        <span  style="font-size:1.2em;margin-right:0.3em;" class="label label-success pull-right">{{ k['first'] | mytor(user['position'] | int )}}</span>
+        {% else %}
+        <a  href="#" style="font-size:1.2em;margin-right:0.3em;" class="label label-success pull-right editable" data-pk="{{user.username}}" data-name="users/position">{{ user['position'] | emptysign }}</a>
+        {% endif %}
         </td>
 
         <td class="hidden-xs">
