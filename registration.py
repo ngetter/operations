@@ -193,7 +193,15 @@ def participants(id):
     r = con.find_one({'_id':ObjectId(id)})
     try:
         users = mdb['users'].find({"username":{"$in":r['participate']}})
-        return render_template('participants.html', l = list(users), operation=r)
+        l = list(users)
+        # print(r) 
+        for x in l:
+            if 'position' in x:
+                x['position'] = mytor(int(r['first']),int(x['position']))
+            else:
+                x['position'] = 65
+        part = sorted(l, key=lambda k: k['position']) 
+        return render_template('participants.html', l = part, operation=r)
     except KeyError:
         return render_template('participants.html', l = [], operation=r)
 
