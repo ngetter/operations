@@ -22,7 +22,7 @@
 {% for k in l %}
     <tr>
         <td>{{ k.plname }}</td>
-        <td>{{ k.username }}</td>
+        <td><a class="editable" href="#" data-pk="{{ k._id }}" data-name="users/username" >{{ k.username | emptysign }}</a></td>
         <td><a class="editable" href="#" data-pk="{{ k._id }}" data-name="users/status" >{{ k.status | emptysign }}</a></td>
         <td><a class="editable" href="#" data-pk="{{ k._id }}" data-name="users/position">{{ k.position | emptysign }}</a></td>
     </tr>

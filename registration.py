@@ -195,7 +195,7 @@ def participants(id):
         users = mdb['users'].find({"username":{"$in":r['participate']}})
         return render_template('participants.html', l = list(users), operation=r)
     except KeyError:
-        return '<div class="alert alert-info">אין משתתפים בפעולה זו</div>'
+        return render_template('participants.html', l = [], operation=r)
 
 @app.route('/mark_arrival', methods=['POST'])
 @app.route('/mark_arrival/<int:id>', methods=['GET'])
@@ -263,7 +263,7 @@ def update():
     colection, fname = request.form['name'].split("/")
     try:
         tor=mdb[colection]
-        r = tor.find_one({'_id':int(id)})
+        r = tor.find_one({'_id':ObjectId(id)})
 
         r[fname] = newname
         tor.save(r)
