@@ -293,7 +293,10 @@ def getUserDetails():
 		# if LOCAL == False: logen.warn("abort(404)")
 		# abort(404)
 
-    
+@app.route('/SendWeeklyEmail')
+def sendWeeklyEmail():
+	return "OK %s" % str(dt.now())
+	
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for x in range(size))        
 
