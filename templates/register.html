@@ -112,6 +112,19 @@
             $("#check").val($(this).val())
         })
     $("#group-check").popover('hide');
+	
+	$("#username").focusout(function(){
+		$.post(
+			"getUserDetails",{ name: $("#username").val() },
+			function( data ) {
+				console.log ( data );
+				if(data.plname) {
+					$("#plname").val(data.plname);
+					//$(".btn-group").fadeOut();
+				}
+				
+			},"json");
 
+		})
 </script>
 {% endblock %}

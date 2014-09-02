@@ -200,6 +200,7 @@ def participants(id):
                 x['position'] = mytor(int(r['first']),int(x['position']))
             else:
                 x['position'] = 65
+                
         part = sorted(l, key=lambda k: k['position']) 
         return render_template('participants.html', l = part, operation=r)
     except KeyError:
@@ -278,9 +279,24 @@ def update():
         return "True"
     except TypeError:
         return "Type Error %s"%id
+
+@app.route('/getUserDetails', methods=['POST'])
+def getUserDetails():
+	email = request.form['name']
+	try:
+		users = mdb['users']
+		r = users.find_one({'username':email})
+		return dumps({"plname":r['plname'], "status":r['status']})
+	except TypeError:
+		return dumps({"response":"new member"})
+	# except Exception:
+		# if LOCAL == False: logen.warn("abort(404)")
+		# abort(404)
+
     
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for x in range(size))        
+
 
 @app.template_filter('emptysign')
 def emptysign(value):
@@ -289,6 +305,15 @@ def emptysign(value):
     else:
         return Markup("<i class='fa fa-exclamation-triangle'></i>")
 
+@app.template_filter('typesign')
+def typesign(value):
+    if value=='חניך':
+        return value
+    elif value=='סוליסט':
+        return value
+    else:
+        return value
+    
 @app.template_filter('mytor')
 def mytor(value, position):
     if value:
@@ -298,6 +323,6 @@ def mytor(value, position):
             return 64 - int(value) + position +  + 1
     else:
         return Markup("<i class='fa fa-exclamation-triangle'></i>")
-        
+ 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')

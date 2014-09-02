@@ -22,7 +22,7 @@
 {% endif %}
 <div>
 <span style="margin-right:1em;margin-top:1em;">
-<span>{{ k.position | emptysign }}</span>
+<span>{{ k.position | emptysign | center(4) }}</span>
 <i class="fa {{ bullet.class }} fa-fw" style="color:{{ bullet.color }}; margin-left:0.5em" />{{ k.plname }}</span>
 </div>
 {% endfor %}<!-- k in l -->
