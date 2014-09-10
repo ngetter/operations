@@ -3,19 +3,24 @@
 {% block content %}
 <div>
 <h3>רישום לפעולה במרכז הדאייה נגב</h3>
-<p class="text-right">עד עכשיו נרשמו לפעילות בסוף השבוע הקרוב <strong>{{ membersNumber }}</strong> חברים</p>
-<p class="text-right">אבקש מכל מי שמעוניין לטוס בסוף השבוע הקרוב להרשם לפעולה באתר</p>
+<hr/>
+<p style="text-align:right">שלום חברים</p>
 
-<p class="text-right">כל מי שנרשם ולא מעוניין להגיע מתבקש לבטל את הרישום</p>
-<p class="text-right">לביטול הרישום לפעולה -  </p>
+{% if membersNumber==0 %}
+<p style="text-align:right;font-family: arial, sans-serif;">עד כה לא נרשמו  חניכים או סוליסטים לפעולות סוף השבוע.</p>
+{% else %}
+<p style="text-align:right;font-family: arial, sans-serif;">עד עכשיו נרשמו לפעילות בסוף השבוע הקרוב <strong>{{ membersNumber }}</strong> חברים</p>
+{% endif %}
 
-     <div><!--[if mso]>
-      <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{server}}/mark_arrival/{{opdate}}" style="height:36px;v-text-anchor:middle;width:150px;" arcsize="50%" strokecolor="#e6e6e8" fillcolor="#f48810">
-        <w:anchorlock/>
-        <center style="color:#2f353e;font-family:sans-serif;font-size:13px;font-weight:bold;">לחץ כאן</center>
-      </v:roundrect>
-    <![endif]--><a href="{{server}}/mark_arrival/{{id}}"
-    style="background-color:#f48810;border:1px solid #e6e6e8;border-radius:18px;color:#2f353e;display:inline-block;font-family:sans-serif;font-size:13px;font-weight:bold;line-height:36px;text-align:center;text-decoration:none;width:150px;-webkit-text-size-adjust:none;mso-hide:all;">לחץ כאן</a>
-    </div>
+<p style="text-align:right;font-family: arial, sans-serif;">חניכים וסוליסטים שמעוניינים להגיע לפעולות סוף השבוע, אנא הרשמו לפעולה באמצעות המערכת החדשה.</p>
+<p style="text-align:right;font-family: arial, sans-serif;">גם אם אינכם חניכים או סוליסטים, הנכם מוזמנים להרשם לפעולות סוף השבוע הקרוב. כך, תוכלו לראות במערכת את מקומכם בתור הדואים</p>
+<p/>
+<p style="text-align:right;font-family: arial, sans-serif;">הרשמה לפעולה מתבצעת באמצעות לחיצה על הכפתור הכחול עם הכותרת "לא משתתף". לאחר הלחיצה הכפתור יהפוך ירוק וכותרתו "משתתף".</p>
+</p>
+<p style="text-align:right;font-family: arial, sans-serif;font-weight:bold;">כל מי שנרשם ולא מעוניין להגיע מתבקש לבטל את הרישום</p>
+<hr/>
+<li style="text-align:right;font-family: arial, sans-serif;">אפשר להיכנס מהאתר של המועדון <a href="http://www.ngc.org.il/%D7%AA%D7%95%D7%A8-%D7%97%D7%A0%D7%99%D7%9B%D7%99%D7%9D.html">בקישור הזה</a></li>
+<li style="text-align:right;font-family: arial, sans-serif;">מטלפונים סלולריים וטאבלטים מומלץ להכנס <a href="http://ancient-beyond-8896.herokuapp.com/">בקישור הזה</a></li>
+
 </div>
 {% endblock %}

@@ -55,6 +55,7 @@
     
     {% if form.errors.username is defined %}
         <div  class="form-group {{ form.errors.username[0][1] }}">
+		
         {{ form.username.label }}
         {{ form.username(placeholder="כתובת דואר אלקטרוני" ) }}
 
@@ -64,8 +65,9 @@
         {{ form.username.label }}
         {{ form.username(placeholder="כתובת דואר אלקטרוני") }}
     {% endif %}
+	<p id="username_in_system" class="text-success">שם קיים במערכת:<strong id="thename"></strong></p>
     <span class="help-block">כתובת הדואר האלקטרוני תשמש למשלוח הודעות מערכת בנוגע לרישום חברים לפעולה</span>
-    
+    <div id="register_only">
     {{ form.plname.label }}
     {{ form.plname(placeholder="הכנס שם פרטי ומשפחה") }}
     {% if form.errors.plname is defined %}
@@ -91,7 +93,8 @@
         בעל רשיון (אחר)
       </label>
     
-    </div>
+    </div> <!-- buttons -->
+	</div> <!-- register only -->
     <!--
     <div class="recapcha-container" >
     {{ form.recaptcha }}
@@ -99,7 +102,7 @@
     --> 
   </fieldset>    
     <div style="margin-top:15px;">
-    <button type="submit" class="btn btn-large btn-primary">שלח</button>
+    <button type="submit" id="submit" class="btn btn-large btn-primary">שלח</button>
     </div>
 
 </form>
@@ -108,23 +111,38 @@
 {% block script %}
 <script>
 
+	$("#register_only").hide();
+	$("#username_in_system").hide();
+	$("#submit").addClass('disabled');
     $(".btn-check").click(function(){
             $("#check").val($(this).val())
         })
     $("#group-check").popover('hide');
 	
 	$("#username").focusout(function(){
+		var input = $("#username").val();
+		if (input != '') {
 		$.post(
-			"getUserDetails",{ name: $("#username").val() },
+			"getUserDetails",{ name: input },
 			function( data ) {
 				console.log ( data );
 				if(data.plname) {
 					$("#plname").val(data.plname);
-					//$(".btn-group").fadeOut();
+					$("#username_in_system").fadeIn();
+					$("#thename").html(data.plname);
+					$("#submit").removeClass('disabled');
+				}
+				else 
+				{
+					$("#register_only").fadeIn();
+					$("#plname").val('');
+					$("#submit").addClass('disabled');
 				}
 				
 			},"json");
-
+		}
+		else {$("#register_only").hide();}
 		})
+	
 </script>
 {% endblock %}

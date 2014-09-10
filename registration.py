@@ -45,6 +45,7 @@ else:
 RECAPTCHA_PUBLIC_KEY = "6LcWKPASAAAAAN4dF2Qf7Ojyv6vpv4FvXFoxR6SC"
 RECAPTCHA_PRIVATE_KEY = "6LcWKPASAAAAAKpIVc_iPFM7T6xtyebNCplhIB5h"
 RECAPTCHA_OPTIONS = {"theme":"white"}
+TOR_SIZE = 64
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -151,19 +152,19 @@ def register():
             logen.info('annonymous redirected to registration form')
             return render_template('register.html', form=form)
 
-@app.route('/mailgun')
-def mailgun():
-    requests.post(
-        "https://api.mailgun.net/v2/nir.mailgun.org/messages",
-        auth=("api", "key-6vcbt7a5dv8p754k3myvzqb5p8123ts5"),
-        files=[("inline", open("static/img/logo.jpg","rb"))],
-        data={"from": "Nir Getter <postmaster@nir.mailgun.org>",
-              "to": "ngetter@gmail.com",
-              "subject": u"ניסוי מייל",
-              "html": render_template('register_from_email.html',username="ngetter@gmail.com", token="token bla bla", operation = (1,2), server=RETURN_TO),
-              "o:tag": "self"
-              })
-    return render_template('mailok.html')
+# @app.route('/mailgun')
+# def mailgun():
+    # requests.post(
+        # "https://api.mailgun.net/v2/nir.mailgun.org/messages",
+        # auth=("api", "key-6vcbt7a5dv8p754k3myvzqb5p8123ts5"),
+        # files=[("inline", open("static/img/logo.jpg","rb"))],
+        # data={"from": "Nir Getter <postmaster@nir.mailgun.org>",
+              # "to": "ngetter@gmail.com",
+              # "subject": u"ניסוי מייל",
+              # "html": render_template('register_from_email.html',username="ngetter@gmail.com", token="token bla bla", operation = (1,2), server=RETURN_TO),
+              # "o:tag": "self"
+              # })
+    # return render_template('mailok.html')
     
     #return  render_template('register_from_email.html',username="ngetter@gmail.com", token="token bla bla", operation = (1,2), server=RETURN_TO)
 
@@ -293,9 +294,40 @@ def getUserDetails():
 		# if LOCAL == False: logen.warn("abort(404)")
 		# abort(404)
 
-@app.route('/SendWeeklyEmail')
-def sendWeeklyEmail():
-	return render_template('weeklyMail.html', membersNumber = 3)
+@app.route('/SendWeeklyEmail/<int:members>')
+def sendWeeklyEmail(members):
+	html =  render_template('weeklyMail.html', membersNumber = members)
+	r = requests.post(
+        "https://api.mailgun.net/v2/nir.mailgun.org/messages",
+        auth=("api", "key-6vcbt7a5dv8p754k3myvzqb5p8123ts5"),
+        files=[("inline", open("static/img/logo.jpg","rb"))],
+        data={"from": "Nir Getter <ngetter@gmail.com>",
+              "to": ["negevgliding@savoray.com ","ngetter@gmail.com"],
+              "subject": u"תזכורת בנוגע לרישום לפעולה במדנ לסוף השבוע הקרוב",
+              "text": u"תזכורת בנוגע לרישום לפעולה במדנ לסוף השבוע הקרוב",
+			  #"html": render_template('registeToOperation.html',username="ngetter@gmail.com", id=1,opdate=dt.now(), users=[], server=RETURN_TO),
+              "html":html,
+              "o:tag": "reminder"
+              })
+
+	return html
+
+@app.route('/SsendReminder')
+def sendReminder():
+	con = mdb['operations']
+	r = con.find({'date':{'$gte':dt.now(None)-td(2)}}).sort("date",1).limit(2)
+	try:
+		users_1= mdb['users'].find({"username":{"$in":r[0]['participate']}})
+		l_1 = list(users_1)
+
+		users_2= mdb['users'].find({"username":{"$in":r[1]['participate']}})
+		l_2 = list(users_2)
+		# print(r) 
+		l = len(l_1) + len(l_2)
+		sendWeeklyEmail(l)
+		return '%s participants' % str(l)
+	except KeyError as e:
+		return 'Error %s' % str(e)
 	
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for x in range(size))        
@@ -323,7 +355,7 @@ def mytor(value, position):
         if position >= int(value):
             return position - int(value) + 1
         else:
-            return 64 - int(value) + position +  + 1
+            return TOR_SIZE - int(value) + position + 1
     else:
         return Markup("<i class='fa fa-exclamation-triangle'></i>")
  
