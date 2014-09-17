@@ -116,10 +116,10 @@
         <td class="hidden-xs">
             <a class="editable" href="#" 
                 data-pk="{{k._id}}"
-                data-name="operations/instractor">{{ k['instractor'] }}</a><br/>
+                data-name="operations/instractor">{{ k['instractor'] | emptysign }}</a><br/>
             <a class="editable" href="#" 
                 data-pk="{{k._id}}" 
-                data-name="operations/incharge">{{ k['incharge'] }}</a>
+                data-name="operations/incharge">{{ k['incharge'] | emptysign }}</a>
             
 <!--             <a class="editable" href="#" 
                 data-pk="{{k._id}}" 
@@ -168,10 +168,10 @@
         <td class="hidden-xs">
             <a class="editable" href="#" 
                 data-pk="{{k._id}}"
-                data-name="operations/instractor">{{ k['instractor'] }}</a><br/>
+                data-name="operations/instractor">{{ k['instractor'] | emptysign}}</a><br/>
             <a class="editable" href="#" 
                 data-pk="{{k._id}}" 
-                data-name="operations/incharge">{{ k['incharge'] }}</a>
+                data-name="operations/incharge">{{ k['incharge'] | emptysign("חסר") }}</a>
             
 <!--             <a class="editable" href="#" 
                 data-pk="{{k._id}}" 

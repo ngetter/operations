@@ -334,11 +334,11 @@ def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
 
 
 @app.template_filter('emptysign')
-def emptysign(value):
+def emptysign(value, text=''):
     if value:
         return value
     else:
-        return Markup("<i class='fa fa-exclamation-triangle'></i>")
+        return Markup("<i class='fa fa-exclamation-triangle'></i><span>%s</span>" % text)
 
 @app.template_filter('typesign')
 def typesign(value):
