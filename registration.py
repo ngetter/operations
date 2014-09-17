@@ -319,16 +319,18 @@ def sendReminder():
 	try:
 		users_1= mdb['users'].find({"username":{"$in":r[0]['participate']}})
 		l_1 = list(users_1)
-
+	except KeyError as e:
+		l_1 = []
+	try:
 		users_2= mdb['users'].find({"username":{"$in":r[1]['participate']}})
 		l_2 = list(users_2)
+	except KeyError as e:
+		l_2 = []
 		# print(r) 
 		l = len(l_1) + len(l_2)
 		sendWeeklyEmail(l)
 		return '%s participants' % str(l)
-	except KeyError as e:
-		return 'Error %s' % str(e)
-	
+
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for x in range(size))        
 
