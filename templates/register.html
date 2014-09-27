@@ -111,9 +111,9 @@
 {% block script %}
 <script>
 
-	$("#register_only").hide();
+	//$("#register_only").hide();
 	$("#username_in_system").hide();
-	$("#submit").addClass('disabled');
+	//$("#submit").addClass('disabled');
     $(".btn-check").click(function(){
             $("#check").val($(this).val())
         })
@@ -130,13 +130,13 @@
 					$("#plname").val(data.plname);
 					$("#username_in_system").fadeIn();
 					$("#thename").html(data.plname);
-					$("#submit").removeClass('disabled');
+					//$("#submit").removeClass('disabled');
 				}
 				else 
 				{
 					$("#register_only").fadeIn();
 					$("#plname").val('');
-					$("#submit").addClass('disabled');
+					//$("#submit").addClass('disabled');
 				}
 				
 			},"json");
