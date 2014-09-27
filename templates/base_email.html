@@ -13,16 +13,18 @@
   </head>
 
 <body dir=rtl style="background-color:lightgray;padding:1em 1em 1em 1em; margin: 1em 1em 1em 1em;">
-<div align="center">
-	<table width="70%" align="center" height=200 style="background-color:white;">
+<div align="center" style="">
+	<table width="70%" align="center" height=200 style="background-color:white;border: 2px solid lightgray;border-radius: 25px;">
         <tr>
-            <td><!--
-            <img src="cid:logo.jpg" alt="ngc-logo" style="margin:0em 3em 0em 3em;height: 5%;width: 5%;">
-			-->
+            <td>
+            <img src="cid:logo.jpg" alt="ngc-logo" style="margin:0em -5em 0em 0em">
+			<span style="font-size:15pt;">מערכת לרישום חברים לפעולות</span>
+			<span style="font-size:12pt;color: gray;">{% block subtitle %}{% endblock %}</span>
+			<hr style="border: 1px dotted gray;"/>
             </td>
         </tr>
         
-        <tr>
+        <tr >
             <td style="padding:0em 1.5em 0em 1.5em;">
             {% block content %}{% endblock %}
             </td>
