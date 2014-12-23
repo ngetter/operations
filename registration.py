@@ -198,7 +198,10 @@ def participants(id):
         # print(r) 
         for x in l:
             if 'position' in x:
-                x['position'] = mytor(int(r['first']),int(x['position']))
+                try:
+                    x['position'] = mytor(int(r['first']),int(x['position']))
+                except ValueError:
+                    x['position'] = 65
             else:
                 x['position'] = 65
                 
