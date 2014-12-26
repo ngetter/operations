@@ -2,7 +2,7 @@
 {% block script %}
 <script>
 
-    $.fn.editable.defaults.mode = 'popup';
+    $.fn.editable.defaults.mode = 'inline';
     $(document).ready(function() {
         $('.editable').editable({
             type: 'text',
@@ -29,11 +29,13 @@
                     btn.html('<span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;משתתף');
                     btn.removeClass('btn-primary').addClass('btn-success');
                     $('#' + btn.data('id')).removeClass('warning').addClass('success')
+					$('#personal_comment_' + btn.data('id')).removeClass('hidden')
                     }
                 else {
                     btn.html('<span class="glyphicon glyphicon-thumbs-down"></span>&nbsp;לא משתתף');
                     btn.removeClass('btn-success').addClass('btn-primary');
                     $('#' + btn.data('id')).removeClass('success').addClass('warning')
+					$('#personal_comment_' + btn.data('id')).addClass('hidden')
                     }
 				});
 
@@ -59,11 +61,7 @@
             }).done(function(str){$(".modal-content").html(str)});
     });
     
-    //$('.addthisevent').popover()
 
-
-
-    
 </script>
 {% endblock %}
 
@@ -72,7 +70,7 @@
 {% endblock %}
 
 {% block content %}
-<div id="modal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div id="modal" class="modal fade bs-example-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
         <div class="modal-header">
@@ -89,9 +87,10 @@
 </div>
 
 <table id="operations" class='table table-striped table-condensed' >
+
     {% for k in l[0:2] %}
     {% if k.participate %}
-        {% if user.username not in k.participate  %}
+        {% if k.participate == 'False' %}
             {% set buttonStatus = {'buttonClass':'btn-primary','buttonCaption':'לא משתתף', 'rowClass':'warning', 'glyph':'glyphicon-thumbs-down'} %}
             {% set btnMesage = {'buttonClass':'hidden'} %}
         {% else %}
@@ -120,21 +119,27 @@
             <a class="editable" href="#" 
                 data-pk="{{k._id}}" 
                 data-name="operations/incharge">{{ k['incharge'] | emptysign }}</a>
-            
-<!--             <a class="editable" href="#" 
-                data-pk="{{k._id}}" 
-                data-name="operations/first">{{ k['first'] }}</a> -->
         </td>        
-        <td><!-- <a href="#" class="txt-comment" id="comment" data-type="text" data-pk="1" data-url="/post" data-title="Enter username">הערה</a> -->
-            <button type="button" style="width:8em;" class="btn {{ buttonStatus.buttonClass }} btn-arrival btn-sm" data-id="{{ k._id  }}">
-                <span class="glyphicon {{ buttonStatus.glyph }}"></span>&nbsp;{{ buttonStatus.buttonCaption }}
-            </button>
-        </td>
         <td>
+
+				<button type="button" style="width:8em;" class="btn {{ buttonStatus.buttonClass }} btn-arrival " data-id="{{ k._id  }}">
+					<span class="glyphicon {{ buttonStatus.glyph }}"></span>&nbsp;{{ buttonStatus.buttonCaption }}
+				</button>
+
+
+        </td>
+		<td>
+			<a id="personal_comment_{{k._id}}" class="editable {{ btnMesage.buttonClass }}" href="#" 
+                data-pk="{{k._id}}"
+                data-name="operations/participate/comment">{{ k['participant_comment'] | emptysign("הוסף הערה") }}</a><br/>
+		</td>
+        <td>
+			
             <button type="button" class="btn btn-link modal-list pull-left" id="modal_a_{{ k._id }}" data-toggle="modal" data-target="#modal" href="participants/{{ k._id }}">
-                <span id='length_{{ k._id  }}' class="badge badge-primary">{{ k['participate']|length }}</span>
+				<span id='length_{{ k._id  }}' class="badge badge-primary">{{ k['participants_count'] }}</span>
                 <i class="fa fa-chevron-left"></i>        
-            </a>
+            </button>
+			
         </td>
 
     </tr>
@@ -147,7 +152,7 @@
 <table class='table table-striped table-condensed' >
     {% for k in l[2:] %}
     {% if k.participate %}
-        {% if user.username not in k.participate  %}
+        {% if k.participate == 'False' %}
             {% set buttonStatus = {'buttonClass':'btn-primary','buttonCaption':'לא משתתף', 'rowClass':'warning', 'glyph':'glyphicon-thumbs-down'} %}
         {% else %}
             {% set buttonStatus = {'buttonClass':'btn-success','buttonCaption':'משתתף', 'rowClass':'success', 'glyph':'glyphicon-thumbs-up'} %}
@@ -180,7 +185,7 @@
         <td width="31%"><button type="button" style="width:8em;" class="btn {{ buttonStatus.buttonClass }} btn-sm btn-arrival pull-right" data-loading-text="טוען..." data-id="{{ k._id  }}"><span class="glyphicon {{ buttonStatus.glyph }} pull-right"></span>&nbsp;{{ buttonStatus.buttonCaption }}</button>
         <td>
             <button type="button" class="btn btn-link modal-list pull-left" id="modal_a_{{ k._id }}" data-toggle="modal" data-target="#modal" href="participants/{{ k._id }}">
-                <span id='length_{{ k._id  }}' class="badge badge-primary">{{ k['participate']|length }}</span>
+                <span id='length_{{ k._id  }}' class="badge badge-primary">{{ k['participants_count'] }}</span>
                 <i class="fa fa-chevron-left"></i>        
             </a>
         </td>

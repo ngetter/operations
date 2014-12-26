@@ -90,6 +90,17 @@ def index():
             
         col = mdb['operations']
         l = list(col.find({'date':{'$gte':dt.now(None)-td(2)}}).sort("date",1).limit(12))
+        for li in l:
+            try:
+
+                li['participants_count'] = len(li['participate'])
+                par_list = username in li
+                par_dict =  [x for x in li['participate'] if isinstance(x, dict) and x['un'] == username]
+                li['participate'] = str((len(par_dict) > 0) or par_list)
+                li['participant_comment'] = par_dict[0]['comment']
+            except:
+                pass
+
         return render_template('main.html', l=l, user=r)	
     else:
         return redirect(url_for('register'))
@@ -152,22 +163,6 @@ def register():
             logen.info('annonymous redirected to registration form')
             return render_template('register.html', form=form)
 
-# @app.route('/mailgun')
-# def mailgun():
-    # requests.post(
-        # "https://api.mailgun.net/v2/nir.mailgun.org/messages",
-        # auth=("api", "key-6vcbt7a5dv8p754k3myvzqb5p8123ts5"),
-        # files=[("inline", open("static/img/logo.jpg","rb"))],
-        # data={"from": "Nir Getter <postmaster@nir.mailgun.org>",
-              # "to": "ngetter@gmail.com",
-              # "subject": u"ניסוי מייל",
-              # "html": render_template('register_from_email.html',username="ngetter@gmail.com", token="token bla bla", operation = (1,2), server=RETURN_TO),
-              # "o:tag": "self"
-              # })
-    # return render_template('mailok.html')
-    
-    #return  render_template('register_from_email.html',username="ngetter@gmail.com", token="token bla bla", operation = (1,2), server=RETURN_TO)
-
 def sendRegMessage(to,member,id, opdate):
     con = mdb['operations']
     r = con.find_one({'_id':ObjectId(id)})
@@ -193,10 +188,14 @@ def participants(id):
     con = mdb['operations']
     r = con.find_one({'_id':ObjectId(id)})
     try:
-        users = mdb['users'].find({"username":{"$in":r['participate']}})
-        l = list(users)
+        
+        new_par = [x for x in r['participate'] if isinstance(x, dict)]
+        new_par = [x['un'] for x in new_par]
+        users = mdb['users'].find({"username":{"$in":r['participate'] + new_par}})
+        l = list(users) 
         # print(r) 
         for x in l:
+            x['comment'] = [t for t in r['participate'] if isinstance(t, dict) and t['un']==x['username']][0]['comment']
             if 'position' in x:
                 try:
                     x['position'] = mytor(int(r['first']),int(x['position']))
@@ -227,6 +226,9 @@ def arrival(id = None):
     r = con.find_one({'_id':ObjectId(id)})
 
     try:
+        new_par = [x for x in r['participate'] if isinstance(x, dict) and x['un'] == un]
+        print(len(new_par))#new_par = [x['un'] for x in new_par]
+
         if un in r['participate']:
             r['participate'].remove(un)
             print('%s chacked out from %s'%(session['username'],r['date']))
@@ -236,8 +238,16 @@ def arrival(id = None):
                 return dumps({'participate':False, 'length':len(list(r['participate']))})
             else:
                 return render_template('unregisterConfirm.html',opdate=r['date'], plname=session['plname'])
+        elif len(new_par) > 0:
+            print (new_par[0])
+            r['participate'].remove(new_par[0])
+            con.save(r)
+            if request.method == 'POST':
+                return dumps({'participate':False, 'length':len(list(r['participate']))})
+            else:
+                return render_template('unregisterConfirm.html',opdate=r['date'], plname=session['plname'])
         else:
-            r['participate'].append(un)
+            r['participate'].append(dict(un=un))
 
             logen.info('%s chacked in to %s'%(session['username'],r['date']))
             sendRegMessage(session['username'],session['plname'],id, r['date'])
@@ -256,7 +266,7 @@ def arrival(id = None):
         return 'ValueError'
     except KeyError:
         print('KeyError')
-        r['participate'] = [un]
+        r['participate'] = [dict(un=un)]
         logen.info('%s chacked in to %s'%(session['username'],r['date']))
         sendRegMessage(session['username'],session['plname'],id, r['date'])
         con.save(r) 
@@ -264,21 +274,40 @@ def arrival(id = None):
 
 @app.route('/tables/<collection>')
 def tables(collection):
-    tor=mdb[collection]
+    if 'username' in session:
+        session.permanent = True
+        username = escape(session['username'])
+        try:
+            users = mdb['users']
+            r = users.find_one({'username':username})
+            session['plname'] = r['plname']
+        except TypeError:
+            return redirect(url_for('logout'))
+	tor=mdb[collection]
     l = list(tor.find({}).sort("_id",1))
-    return render_template('%s/index.html'%collection, l=l)
+    return render_template('%s/index.html'%collection, l=l, user = r)
 
     
 @app.route('/update', methods=['POST'])
 def update():
     id = request.form['pk']
     newname = request.form['value']
-    colection, fname = request.form['name'].split("/")
+    params = request.form['name'].split("/")
     try:
-        tor=mdb[colection]
+        tor=mdb[params[0]]
         r = tor.find_one({'_id':ObjectId(id)})
-
-        r[fname] = newname
+        if len(params) == 2:
+            r[params[1]] = newname
+        elif len(params) == 3:
+            username = escape(session['username'])
+            t=r[params[1]]
+            key = params[2]
+            doc = [x for x in t if isinstance(x, dict) and x['un'] == username][0]
+            t.remove(doc)
+            doc[key] = newname
+            t.append(doc)
+            r[params[1]] = t
+            
         tor.save(r)
         return "True"
     except TypeError:
@@ -308,14 +337,13 @@ def sendWeeklyEmail(members):
               "to": ["negevgliding@savoray.com ","ngetter@gmail.com"],
               "subject": u"תזכורת בנוגע לרישום לפעולה במדנ לסוף השבוע הקרוב",
               "text": u"תזכורת בנוגע לרישום לפעולה במדנ לסוף השבוע הקרוב",
-			  #"html": render_template('registeToOperation.html',username="ngetter@gmail.com", id=1,opdate=dt.now(), users=[], server=RETURN_TO),
               "html":html,
               "o:tag": "reminder"
               })
 
 	return html
 
-@app.route('/SsendReminder')
+@app.route('/SendReminder')
 def sendReminder():
 	con = mdb['operations']
 	r = con.find({'date':{'$gte':dt.now(None)-td(2)}}).sort("date",1).limit(2)
@@ -331,7 +359,7 @@ def sendReminder():
 		l_2 = []
 		# print(r) 
 		l = len(l_1) + len(l_2)
-		sendWeeklyEmail(l)
+		#sendWeeklyEmail(l)
 		return '%s participants' % str(l)
 
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
@@ -342,8 +370,10 @@ def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
 def emptysign(value, text=''):
     if value:
         return value
+    elif text != '':
+        return Markup("<span>%s</span>" % text)
     else:
-        return Markup("<i class='fa fa-exclamation-triangle'></i><span>%s</span>" % text)
+        return Markup("<i class='fa fa-exclamation-triangle'></i>" )
 
 @app.template_filter('typesign')
 def typesign(value):
