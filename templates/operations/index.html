@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block script %}
+<script>
+
+    $.fn.editable.defaults.mode = 'popup';
+    $(document).ready(function() {
+        $('#piloti').html('document ready')
+        $('.editable').editable({
+            type: 'text',
+            //name: '/instructor',
+            url: '/update',
+            title: 'בחר ערך אחר'
+        });
+    }); 
+</script>
+{% endblock %}
+
+{% block content %}
+
+<div id="piloti">ha</div> 
+<table class='table table-striped table-condensed' >
+{% for k in l %}
+    <tr>
+        <td>{{ k.plname }}</td>
+        <td><a class="editable" href="#" data-pk="{{ k._id }}" data-name="operations/date" >{{ k.username | emptysign }}</a></td>
+        <td><a class="editable" href="#" data-pk="{{ k._id }}" data-name="operations/instractor" >{{ k.status | emptysign }}</a></td>
+        <td><a class="editable" href="#" data-pk="{{ k._id }}" data-name="operations/incharge">{{ k.position | emptysign }}</a></td>
+        <td><a class="editable" href="#" data-pk="{{ k._id }}" data-name="operations/tow">{{ k.position | emptysign }}</a></td>
+        <td><a class="editable" href="#" data-pk="{{ k._id }}" data-name="operations/participate">{{ k.position | emptysign }}</a></td>
+	</tr>
+{% endfor %}
+</table>
+  
+
+{% endblock %}
