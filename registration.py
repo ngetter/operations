@@ -360,7 +360,7 @@ def sendWeeklyEmail(members):
 @app.route('/SendReminder')
 def sendReminder():
     con = mdb['operations']
-    r = con.find({'date': {'$gte': dt.now(None) - td(2)}}).sort("date", 1).limit(2)
+    r = con.find({'date': {'$gte': dt.now(None) - dt(2)}}).sort("date", 1).limit(2)
     try:
         users_1 = mdb['users'].find({"username": {"$in": r[0]['participate']}})
         l_1 = list(users_1)
