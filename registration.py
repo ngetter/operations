@@ -5,7 +5,7 @@ from datetime import datetime as dt
 import random
 import string
 import logging
-
+import requests
 import os
 from flask import Flask, Markup, request, redirect, url_for, session, escape, render_template, abort, \
     send_from_directory
@@ -14,7 +14,7 @@ from flask_wtf import Form
 from wtforms import TextField
 from wtforms.validators import DataRequired, Email
 from bson.objectid import ObjectId
-import requests
+
 from logentries import LogentriesHandler
 
 
@@ -339,9 +339,10 @@ def getUserDetails():
         return dumps({"response": "new member"})
 
 
-@app.route('/SendWeeklyEmail/<int:members>')
-def sendWeeklyEmail(members):
-    html = render_template('weeklyMail.html', membersNumber=members)
+@app.route('/SendWeeklyEmail/<int:fri>/<int:sat>')
+def sendWeeklyEmail(fri,sat):
+    members = fri + sat
+    html = render_template('weeklyMail.html', membersNumber=members, fri=fri, sat=sat)
     r = requests.post(
         "https://api.mailgun.net/v2/nir.mailgun.org/messages",
         auth=("api", "key-6vcbt7a5dv8p754k3myvzqb5p8123ts5"),
@@ -360,23 +361,33 @@ def sendWeeklyEmail(members):
 @app.route('/SendReminder')
 def sendReminder():
     con = mdb['operations']
-    r = con.find({'date': {'$gte': dt.now(None) - dt(2)}}).sort("date", 1).limit(2)
+    r = con.find({'date': {'$gte': dt.now(None) - td(2)}}).sort("date", 1).limit(2)
     l_1 = []
     l_2 = []
+    err = []
     try:
         users_1 = mdb['users'].find({"username": {"$in": r[0]['participate']}})
         l_1 = list(users_1)
-    except KeyError as e:
+    except:
         l_1 = []
+        err.append({'label':"first day"})
+    
     try:
         users_2 = mdb['users'].find({"username": {"$in": r[1]['participate']}})
         l_2 = list(users_2)
-    except KeyError as e:
+    except:
         l_2 = []
+        err.append({'label': "second day"})
         # print(r)
-    l = len(l_1) + len(l_2)
-    sendWeeklyEmail(l)
-    return '%s participants' % str(l)
+    
+    #sendWeeklyEmail(len(l_1), len(l_2))
+    return str({'fri_num' : len(l_1),
+                'fri_members' : users_1,
+                'fri_date': r[0]['date'],
+                'sat_num' : len(l_2),
+                'sat_members' : r[1]['participate'],
+                'sat_date': r[1]['date'],
+                'err' : err})
 
 
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
