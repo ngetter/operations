@@ -9,7 +9,13 @@
 {% if membersNumber==0 %}
 <p style="text-align:right;font-family: arial, sans-serif;">עד כה לא נרשמו  חניכים או סוליסטים לפעולות סוף השבוע.</p>
 {% else %}
-<p style="text-align:right;font-family: arial, sans-serif;">עד עכשיו נרשמו לפעילות בסוף השבוע הקרוב <strong>{{ membersNumber }}</strong> חברים</p>
+<p style="text-align:right;font-family: arial, sans-serif;">עד עכשיו נרשמו לפעילות בסוף השבוע הקרוב <strong>
+{{ membersNumber }}</strong> חברים</p>
+<p style="text-align:right;font-family: arial, sans-serif;">ליום שישי רשומים: <strong>
+{{ fri }}</strong> חברים ו <strong>{{ fri_guests }}</strong> אורחים</p>
+<p style="text-align:right;font-family: arial, sans-serif;">ליום שבת רשומים: <strong>
+{{ sat }}</strong> חברים ו <strong>{{ sat_guests }}</strong> אורחים</p>
+
 {% endif %}
 
 <p style="text-align:right;font-family: arial, sans-serif;">חניכים וסוליסטים שמעוניינים להגיע לפעולות סוף השבוע, אנא הרשמו לפעולה באמצעות המערכת החדשה.</p>

@@ -339,21 +339,22 @@ def getUserDetails():
         return dumps({"response": "new member"})
 
 
-@app.route('/SendWeeklyEmail/<int:fri>/<int:sat>')
-def sendWeeklyEmail(fri,sat):
+@app.route('/SendWeeklyEmail/<int:fri>/<int:fri_guests>/<int:sat>/<int:sat_guests>')
+def sendWeeklyEmail(fri,fri_guests, sat, sat_guests):
     members = fri + sat
-    html = render_template('weeklyMail.html', membersNumber=members, fri=fri, sat=sat)
-    r = requests.post(
-        "https://api.mailgun.net/v2/nir.mailgun.org/messages",
-        auth=("api", "key-6vcbt7a5dv8p754k3myvzqb5p8123ts5"),
-        files=[("inline", open("static/img/logo.jpg", "rb"))],
-        data={"from": "Nir Getter <ngetter@gmail.com>",
-              "to": ["negevgliding@savoray.com "],
-              "subject": u"תזכורת בנוגע לרישום לפעולה במדנ לסוף השבוע הקרוב",
-              "text": u"תזכורת בנוגע לרישום לפעולה במדנ לסוף השבוע הקרוב",
-              "html": html,
-              "o:tag": "reminder"
-        })
+    html = render_template('weeklyMail.html', membersNumber=members, 
+        fri=fri, sat=sat, fri_guests=fri_guests,sat_guests=sat_guests )
+    # r = requests.post(
+        # "https://api.mailgun.net/v2/nir.mailgun.org/messages",
+        # auth=("api", "key-6vcbt7a5dv8p754k3myvzqb5p8123ts5"),
+        # files=[("inline", open("static/img/logo.jpg", "rb"))],
+        # data={"from": "Nir Getter <ngetter@gmail.com>",
+              # "to": ["negevgliding@savoray.com "],
+              # "subject": u"תזכורת בנוגע לרישום לפעולה במדנ לסוף השבוע הקרוב",
+              # "text": u"תזכורת בנוגע לרישום לפעולה במדנ לסוף השבוע הקרוב",
+              # "html": html,
+              # "o:tag": "reminder"
+        # })
 
     return html
 
@@ -366,28 +367,37 @@ def sendReminder():
     l_2 = []
     err = []
     try:
-        users_1 = mdb['users'].find({"username": {"$in": r[0]['participate']}})
-        l_1 = list(users_1)
+#        users_1 = mdb['users'].find({"username": {"$in": r[0]['participate']}})
+        l_1 = list(r[0]['participate'])
     except:
         l_1 = []
         err.append({'label':"first day"})
     
     try:
-        users_2 = mdb['users'].find({"username": {"$in": r[1]['participate']}})
-        l_2 = list(users_2)
+#        users_2 = mdb['users'].find({"username": {"$in": r[1]['participate']}})
+        l_2 = list(r[1]['participate'])
     except:
         l_2 = []
         err.append({'label': "second day"})
         # print(r)
-    
-    #sendWeeklyEmail(len(l_1), len(l_2))
-    return str({'fri_num' : len(l_1),
-                'fri_members' : users_1,
-                'fri_date': r[0]['date'],
-                'sat_num' : len(l_2),
-                'sat_members' : r[1]['participate'],
-                'sat_date': r[1]['date'],
-                'err' : err})
+    try:
+        fri_guests = r[0]['guests']
+    except KeyError:
+        fri_guests = 0
+        
+    try:
+        sat_guests = r[1]['guests']
+    except KeyError:
+        sat_guests = 0        
+        
+    return sendWeeklyEmail(len(l_1),fri_guests, len(l_2), sat_guests)
+    # return str({'fri_num' : len(l_1),
+                # 'fri_guests' : fri_guests,
+                # 'fri_date': r[0]['date'],
+                # 'sat_num' : len(l_2),
+                # 'sat_guests' : sat_guests,
+                # 'sat_date': r[1]['date'],
+                # 'err' : err})
 
 
 def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
