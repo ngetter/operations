@@ -29,7 +29,11 @@
 </div>
 {% endfor %}<!-- k in l -->
 
-
+<div>
+<span style="margin-right:1em;margin-top:2em;"><i class="fa fa-plus"></i>
+<span style="margin-right:0.5em;">{{ operation.guests | emptysign("אין") }} אורחים</span></span>
+</div>
+<hr/>
 {% else %}
 <div class="alert alert-warning" style="width:80%;margin-right:10%;margin-top:10;"><span class="glyphicon glyphicon-info-sign"><span>&nbsp;&nbsp;אין משתתפים בפעולה זו</div>
 {% endif %}
