@@ -344,17 +344,17 @@ def sendWeeklyEmail(fri,fri_guests, sat, sat_guests):
     members = fri + sat
     html = render_template('weeklyMail.html', membersNumber=members, 
         fri=fri, sat=sat, fri_guests=fri_guests,sat_guests=sat_guests )
-    # r = requests.post(
-        # "https://api.mailgun.net/v2/nir.mailgun.org/messages",
-        # auth=("api", "key-6vcbt7a5dv8p754k3myvzqb5p8123ts5"),
-        # files=[("inline", open("static/img/logo.jpg", "rb"))],
-        # data={"from": "Nir Getter <ngetter@gmail.com>",
-              # "to": ["negevgliding@savoray.com "],
-              # "subject": u"תזכורת בנוגע לרישום לפעולה במדנ לסוף השבוע הקרוב",
-              # "text": u"תזכורת בנוגע לרישום לפעולה במדנ לסוף השבוע הקרוב",
-              # "html": html,
-              # "o:tag": "reminder"
-        # })
+    r = requests.post(
+        "https://api.mailgun.net/v2/nir.mailgun.org/messages",
+        auth=("api", "key-6vcbt7a5dv8p754k3myvzqb5p8123ts5"),
+        files=[("inline", open("static/img/logo.jpg", "rb"))],
+        data={"from": "Nir Getter <ngetter@gmail.com>",
+              "to": ["negevgliding@savoray.com "],
+              "subject": u"תזכורת בנוגע לרישום לפעולה במדנ לסוף השבוע הקרוב",
+              "text": u"תזכורת בנוגע לרישום לפעולה במדנ לסוף השבוע הקרוב",
+              "html": html,
+              "o:tag": "reminder"
+        })
 
     return html
 
