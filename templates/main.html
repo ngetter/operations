@@ -102,6 +102,11 @@
         {% set btnMesage = {'buttonClass':'hidden'} %}
     {% endif %}
     
+    {% if user.username == 'ngetter@gmail.com' %}
+        {% set guestvisible = '' %}
+    {% else %}
+        {% set guestvisible = 'hidden' %}
+    {% endif %}
     <tr class='{{ buttonStatus.rowClass }}' id='{{ k._id }}'>
         <td ><span class="pull-right"><strong>{{ k['date'].strftime('%d.%m') }}</strong><br>{{ k['comment'] }}</span>
         {% if user.position %}
@@ -121,13 +126,15 @@
                 data-name="operations/incharge">{{ k['incharge'] | emptysign }}</a>
         </td>        
         <td>
-
 				<button type="button" style="width:8em;" class="btn {{ buttonStatus.buttonClass }} btn-arrival " data-id="{{ k._id  }}">
 					<span class="glyphicon {{ buttonStatus.glyph }}"></span>&nbsp;{{ buttonStatus.buttonCaption }}
 				</button>
-
-
         </td>
+		<td>
+			<a id="guests_{{k._id}}" class="editable {{ guestvisible }}" href="#" 
+                data-pk="{{k._id}}"
+                data-name="operations/guests">{{ k['guests'] | emptysign("אורחים") }}</a><br/>
+		</td>
 		<td>
 			<a id="personal_comment_{{k._id}}" class="editable {{ btnMesage.buttonClass }}" href="#" 
                 data-pk="{{k._id}}"
