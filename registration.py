@@ -1,4 +1,4 @@
-﻿# This Python file uses the following encoding: utf-8
+# This Python file uses the following encoding: utf-8
 from json import dumps
 from datetime import timedelta as td
 from datetime import datetime as dt
@@ -436,4 +436,5 @@ def mytor(value, position):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0')
+    import os
+    app.run(debug=True, host=os.getenv('IP', '0.0.0.0'), port=int(os.getenv('PORT', 8080)))
