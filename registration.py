@@ -28,7 +28,7 @@ if LOCAL:
 
 else:
     # SERVER_NAME = r'http://ancient-beyond-8896.herokuapp.com:80'
-    RETURN_TO = r'http://ancient-beyond-8896.herokuapp.com'
+    RETURN_TO = r'http://opsign.herokuapp.com'
 
 if MONGO_LOCAL:
     MONGODB_HOST = '127.0.0.1'
