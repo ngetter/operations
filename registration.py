@@ -39,8 +39,8 @@ else:
     MONGODB_HOST = 'ds127928.mlab.com'
     MONGODB_PORT = 27928
     MONGODB_DATABASE = 'operations'
-    MONGODB_USERNAME = 'ngetter'
-    MONGODB_PASSWORD = 'ngc4xGKT32'
+    MONGODB_USERNAME = 'nir'
+    MONGODB_PASSWORD = 'dilk2d123'
 ############# configuration
 
 TOR_SIZE = 64
