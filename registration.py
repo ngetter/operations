@@ -8,12 +8,13 @@ import logging
 import requests
 import os
 from flask import Flask, Markup, request, redirect, url_for, session, escape, render_template, abort, \
-    send_from_directory
+    send_from_directory, jsonify
 from flask.ext.mongokit import MongoKit
 from flask_wtf import Form
 from wtforms import TextField
 from wtforms.validators import DataRequired, Email
 from bson.objectid import ObjectId
+from bson.json_util import dumps as bdumps
 
 from logentries import LogentriesHandler
 
@@ -35,11 +36,11 @@ if MONGO_LOCAL:
     MONGODB_PORT = 27017
     MONGODB_DATABASE = 'test'
 else:
-    MONGODB_HOST = 'troup.mongohq.com'
-    MONGODB_PORT = 10001
-    MONGODB_DATABASE = 'ngc-registration'
-    MONGODB_USERNAME = 'nirg'
-    MONGODB_PASSWORD = 'dilk2d123'
+    MONGODB_HOST = 'ds127928.mlab.com'
+    MONGODB_PORT = 27928
+    MONGODB_DATABASE = 'operations'
+    MONGODB_USERNAME = 'ngetter'
+    MONGODB_PASSWORD = 'ngc4xGKT32'
 ############# configuration
 
 TOR_SIZE = 64
@@ -73,38 +74,52 @@ def favicon():
 @app.route('/index')
 @app.route('/', methods=['POST', 'GET'])
 def index():
+    rule = request.url_rule
+    print (rule.rule)
     if 'username' in session:
-        session.permanent = True
-        username = escape(session['username'])
-        try:
-            users = mdb['users']
-            r = users.find_one({'username': username})
-            session['plname'] = r['plname']
-            if LOCAL == False and username != "ngetter@gmail.com": logen.info('%s logged in' % r['plname'])
-        except TypeError:
-            return redirect(url_for('logout'))
-        except Exception:
-            if LOCAL == False: logen.warn("abort(404)")
-            abort(404)
-
-        col = mdb['operations']
-        l = list(col.find({'date': {'$gte': dt.now(None) - td(2)}}).sort("date", 1).limit(12))
-        for li in l:
+        if not ('api' in rule.rule):
+            session.permanent = True
+            username = escape(session['username'])
             try:
+                users = mdb['users']
+                r = users.find_one({'username': username})
+                session['plname'] = r['plname']
+                if LOCAL == False and username != "ngetter@gmail.com": logen.info('%s logged in' % r['plname'])
+            except TypeError:
+                return redirect(url_for('logout'))
+            except Exception:
+                if LOCAL == False: logen.warn("abort(404)")
+                abort(404)
 
-                li['participants_count'] = len(li['participate'])
-                par_list = username in li
-                par_dict = [x for x in li['participate'] if isinstance(x, dict) and x['un'] == username]
-                li['participate'] = str((len(par_dict) > 0) or par_list)
-                li['participant_comment'] = par_dict[0]['comment']
-            except:
-                pass
-
+        l = getOperations(username)
         return render_template('main.html', l=l, user=r)
+            # request by '/top
+        
     else:
         return redirect(url_for('register'))
 
+@app.route('/api', methods=['POST', 'GET'])
+def apiOperations():
+    col = mdb['operations']
+    l = col.find({'date': {'$gte': dt.now(None) - td(2)}}).sort("date", 1)
+    res = [d for d in l]
+    return jsonify(data=res, success=True)
+    
+def getOperations(username):
+    col = mdb['operations']
+    l = list(col.find({'date': {'$gte': dt.now(None) - td(2)}}).sort("date", 1).limit(12))
+    for li in l:
+        try:
 
+            li['participants_count'] = len(li['participate'])
+            par_list = username in li
+            par_dict = [x for x in li['participate'] if isinstance(x, dict) and x['un'] == username]
+            li['participate'] = str((len(par_dict) > 0) or par_list)
+            li['participant_comment'] = par_dict[0]['comment']
+        except:
+            pass
+    return l
+        
 @app.route('/signin', methods=['POST', 'GET'])
 def signin():
     if request.method == 'POST':
