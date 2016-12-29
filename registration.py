@@ -35,11 +35,12 @@ if MONGO_LOCAL:
     MONGODB_PORT = 27017
     MONGODB_DATABASE = 'test'
 else:
-    MONGODB_HOST = 'troup.mongohq.com'
-    MONGODB_PORT = 10001
-    MONGODB_DATABASE = 'ngc-registration'
-    MONGODB_USERNAME = 'nirg'
-    MONGODB_PASSWORD = 'dilk2d123'
+	#mongodb://<dbuser>:<dbpassword>@ds127928.mlab.com:27928/operations
+    MONGODB_HOST = 'ds127928.mlab.com'
+    MONGODB_PORT = 27928
+    MONGODB_DATABASE = 'operations'
+    MONGODB_USERNAME = 'nir'
+    MONGODB_PASSWORD = '123456'
 ############# configuration
 
 TOR_SIZE = 64
