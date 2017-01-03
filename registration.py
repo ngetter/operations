@@ -40,7 +40,7 @@ else:
     MONGODB_PORT = 27928
     MONGODB_DATABASE = 'operations'
     MONGODB_USERNAME = 'nir'
-    MONGODB_PASSWORD = 'dilk2d123'
+    MONGODB_PASSWORD = '123456'
 ############# configuration
 
 TOR_SIZE = 64
