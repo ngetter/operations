@@ -165,7 +165,7 @@
         <td ><span class="pull-right"><strong>{{ k['date'].strftime('%d.%m') }}</strong><br>{{ k['comment'] }}</span>
         </td>
 
-        <td class="hidden-xs">
+<!--        <td class="hidden-xs">
             <a class="editable" href="#" 
                 data-pk="{{k._id}}"
                 data-name="operations/instractor">{{ k['instractor'] | emptysign}}</a><br/>
@@ -173,10 +173,10 @@
                 data-pk="{{k._id}}" 
                 data-name="operations/incharge">{{ k['incharge'] | emptysign("חסר") }}</a>
             
-<!--             <a class="editable" href="#" 
+             <a class="editable" href="#" 
                 data-pk="{{k._id}}" 
-                data-name="operations/first">{{ k['first'] | emptysign }}</a> -->
-        </td>
+                data-name="operations/first">{{ k['first'] | emptysign }}</a> 
+        </td>-->
         <td width="31%"><button type="button" style="width:8em;" class="btn {{ buttonStatus.buttonClass }} btn-sm btn-arrival pull-right" data-loading-text="טוען..." data-id="{{ k._id  }}"><span class="glyphicon {{ buttonStatus.glyph }} pull-right"></span>&nbsp;{{ buttonStatus.buttonCaption }}</button>
         <td>
             <button type="button" class="btn btn-link modal-list pull-left" id="modal_a_{{ k._id }}" data-toggle="modal" data-target="#modal" href="participants/{{ k._id }}">

@@ -9,7 +9,7 @@ import requests
 import os
 from flask import Flask, Markup, request, redirect, url_for, session, escape, render_template, abort, \
     send_from_directory, jsonify
-from flask.ext.mongokit import MongoKit
+from flask_mongokit import MongoKit
 from flask_wtf import Form
 from wtforms import TextField
 from wtforms.validators import DataRequired, Email
@@ -109,6 +109,7 @@ def apiOperations():
 def getOperations(username):
     col = mdb['operations']
     l = list(col.find({'date': {'$gte': dt.now(None) - td(2)}}).sort("date", 1).limit(12))
+
     for li in l:
         try:
 
