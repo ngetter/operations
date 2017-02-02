@@ -73,6 +73,7 @@ def favicon():
 
 @app.route('/add/<new_date>', methods=['GET'])
 def addDate(new_date):
+    ndate = "error"
     try:
         ndate = dt(new_date.split("-"))
         mdb['operations'].insert([{"date":ndate }])
