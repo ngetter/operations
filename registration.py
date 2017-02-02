@@ -76,7 +76,8 @@ def addDate(new_date):
     nds = new_date.split("-") #new_date split
     ndate = dt( int(nds[0]), int(nds[1]), int(nds[2]) )
     mdb['operations'].insert([{"date":ndate }])
-    return redirect(url_for('/'))
+    return str(ndate)
+
 
     
     
