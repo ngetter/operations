@@ -73,10 +73,10 @@ def favicon():
 
 @app.route('/add/<new_date>', methods=['GET'])
 def addDate(new_date):
-    new_date_split = new_date.split("-")
-    ndate = dt( 2017, 02, 02 )
+    nds = new_date.split("-") #new_date split
+    ndate = dt( int(nds[0]), int(nds[1]), int(nds[2]) )
     mdb['operations'].insert([{"date":ndate }])
-    return str(ndate)
+    return redirect(url_for('/'))
 
     
     
