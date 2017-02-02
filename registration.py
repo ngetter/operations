@@ -75,10 +75,10 @@ def favicon():
 def addDate(new_date):
     ndate = "error"
     try:
-        ndate = dt(new_date.split("-"))
-        #mdb['operations'].insert([{"date":ndate }])
-        #return redirect(url_for('/'))
-        return ndate
+        new_date_split = new_date.split("-")
+        ndate = dt(new_date_split[0],new_date_split[1],new_date_split[2])
+        mdb['operations'].insert([{"date":ndate }])
+        return redirect(url_for('/'))
     except:
         return "dberror {}:{} ".format(new_date, ndate)
         
