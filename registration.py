@@ -73,10 +73,18 @@ def favicon():
 
 @app.route('/add/<new_date>', methods=['GET'])
 def addDate(new_date):
+    days = ["ראשון",
+    "שני",
+    "שלישי",
+    "רביעי",
+    "חמישי",
+    "שישי",
+    "שבת"]
     nds = new_date.split("-") #new_date split
     ndate = dt( int(nds[0]), int(nds[1]), int(nds[2]) )
-    mdb['operations'].insert([{"date":ndate }])
-    return str(ndate)
+    comment = "יום {}".format(days[ndate.isoweekday()])
+    mdb['operations'].insert([{"date":ndate, "comment":comment }])
+    return jsonify(data=str(ndate), success=True) 
 
 
     
