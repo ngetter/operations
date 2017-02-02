@@ -73,7 +73,7 @@ def favicon():
 
 @app.route('/add/<new_date>', methods=['GET'])
 def addDate(new_date):
-    mdb['operations'].insert({"$date":new_date})
+    #mdb['operations'].insert({"$date":new_date})
     return new_date
     
     
