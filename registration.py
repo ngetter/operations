@@ -71,7 +71,11 @@ def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static'),
                                'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
-
+@app.route('/add/<new_date>')
+def addDate(newDate):
+    mdb['operations'].insert({"date":new_date})
+    
+    
 @app.route('/index')
 @app.route('/', methods=['POST', 'GET'])
 def index():
