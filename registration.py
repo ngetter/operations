@@ -73,15 +73,11 @@ def favicon():
 
 @app.route('/add/<new_date>', methods=['GET'])
 def addDate(new_date):
-    ndate = "error"
-    try:
-        new_date_split = new_date.split("-")
-        ndate = dt(new_date_split[0],new_date_split[1],new_date_split[2])
-        mdb['operations'].insert([{"date":ndate }])
-        return redirect(url_for('/'))
-    except:
-        return "dberror {}:{} ".format(new_date, ndate)
-        
+    new_date_split = new_date.split("-")
+    ndate = dt( 2017, 02, 02 )
+    mdb['operations'].insert([{"date":ndate }])
+    return str(ndate)
+
     
     
 @app.route('/index')
