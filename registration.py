@@ -210,7 +210,7 @@ def sendRegMessage(to, member, id, opdate):
         users = []
 
     return requests.post(
-        "https://api.mailgun.net/v2/nir.mailgun.org/messages",
+        "https://api.mailgun.net/v3/mail.ngc.org.il/messages",
         auth=("api", "key-6vcbt7a5dv8p754k3myvzqb5p8123ts5"),
         files=[("inline", open("static/img/logo.jpg", "rb"))],
         data={"from": "מערכת רישום לפעולה - מדנ <postmaster@nir.mailgun.org>",
@@ -379,7 +379,7 @@ def sendWeeklyEmail(fri,fri_guests, sat, sat_guests):
     html = render_template('weeklyMail.html', membersNumber=members, 
         fri=fri, sat=sat, fri_guests=fri_guests,sat_guests=sat_guests )
     r = requests.post(
-        "https://api.mailgun.net/v2/nir.mailgun.org/messages",
+        "https://api.mailgun.net/v3/mail.ngc.org.il/messages",
         auth=("api", "key-6vcbt7a5dv8p754k3myvzqb5p8123ts5"),
         files=[("inline", open("static/img/logo.jpg", "rb"))],
         data={"from": "Nir Getter <ngetter@gmail.com>",
