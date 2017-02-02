@@ -76,8 +76,9 @@ def addDate(new_date):
     ndate = "error"
     try:
         ndate = dt(new_date.split("-"))
-        mdb['operations'].insert([{"date":ndate }])
-        return redirect(url_for('/'))
+        #mdb['operations'].insert([{"date":ndate }])
+        #return redirect(url_for('/'))
+        return ndate
     except:
         return "dberror {}:{} ".format(new_date, ndate)
         
