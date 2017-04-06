@@ -4,16 +4,6 @@
 <div>
 <h3>רישום לפעולה במרכז הדאייה נגב</h3>
 <p class="text-right"><strong>{{username}} </strong>נרשמת לפעילות במרכז הדאייה נגב בתאריך: <strong>{{ opdate.strftime('%d.%m')  }}</strong></p>
-{% if users|length >0 %}
-<p class="text-right">יחד אתך נרשמו לפעולה זו:</p>
-
-
-    {% for u in users %}
-    <li><span>{{ u.plname }}</span><a style="background:#B2CCCC;border-radius: 3px 3px 3px 3px;color: black;display: inline-block; height: 20px;line-height: 20px;padding: 0 20px 0 23px;position: relative;margin: 0 10px 10px 10px;text-decoration: none;" href="#">{{ u.status }}</a></li>
-    {% endfor %}
-{% else %} <!-- if users not defined -->
-    <p><strong>לא נרשמו עדיין חברים נוספים לפעולה</strong>
-{% endif %} <!-- if users -->
 
 <p class="text-right">לביטול הרישום לפעולה -  </p>
 
