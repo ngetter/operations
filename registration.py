@@ -83,7 +83,7 @@ def addDate(new_date):
     nds = new_date.split("-") #new_date split
     ndate = dt( int(nds[0]), int(nds[1]), int(nds[2]) )
     comment = "יום {}".format(days[ndate.isoweekday()])
-    mdb['operations'].insert([{"date":ndate, "comment":comment }])
+    mdb['operations'].insert([{"date":ndate, "comment":comment, "participants":[]}])
     return jsonify(data=str(ndate), success=True) 
 
 
@@ -276,7 +276,7 @@ def arrival(id=None):
         new_par = [x for x in r['participate'] if isinstance(x, dict) and x['un'] == un]
         print(len(new_par))  #new_par = [x['un'] for x in new_par]
 
-        if un in r['participate']:
+        if un in r['participate']: # remove participant already listed to op
             r['participate'].remove(un)
             print('%s chacked out from %s' % (session['username'], r['date']))
             logen.info('%s chacked out from %s' % (session['username'], r['date']))
@@ -285,7 +285,7 @@ def arrival(id=None):
                 return dumps({'participate': False, 'length': len(list(r['participate']))})
             else:
                 return render_template('unregisterConfirm.html', opdate=r['date'], plname=session['plname'])
-        elif len(new_par) > 0:
+        elif len(new_par) > 0: 
             print (new_par[0])
             r['participate'].remove(new_par[0])
             con.save(r)
@@ -293,7 +293,7 @@ def arrival(id=None):
                 return dumps({'participate': False, 'length': len(list(r['participate']))})
             else:
                 return render_template('unregisterConfirm.html', opdate=r['date'], plname=session['plname'])
-        else:
+        else: # append new participant to operation member list
             r['participate'].append(dict(un=un))
 
             logen.info('%s chacked in to %s' % (session['username'], r['date']))
