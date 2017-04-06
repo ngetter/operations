@@ -381,6 +381,7 @@ def sendWeeklyEmail(fri,fri_guests, sat, sat_guests):
     members = fri + sat
     html = render_template('weeklyMail.html', membersNumber=members, 
         fri=fri, sat=sat, fri_guests=fri_guests,sat_guests=sat_guests )
+    html = transform(html)
     r = requests.post(
         "https://api.mailgun.net/v3/mail.ngc.org.il/messages",
         auth=("api", "key-6vcbt7a5dv8p754k3myvzqb5p8123ts5"),
