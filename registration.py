@@ -7,6 +7,7 @@ import string
 import logging
 import requests
 import os
+
 from flask import Flask, Markup, request, redirect, url_for, session, escape, render_template, abort, \
     send_from_directory, jsonify
 from flask_mongokit import MongoKit
@@ -17,7 +18,7 @@ from bson.objectid import ObjectId
 from bson.json_util import dumps as bdumps
 
 from logentries import LogentriesHandler
-
+from premailer import transform
 
 ###### configuration
 LOCAL = False # Make true if running from the IDE
@@ -208,7 +209,10 @@ def sendRegMessage(to, member, id, opdate):
         users = mdb['users'].find({"username": {"$in": r['participate']}})
     except KeyError:
         users = []
-
+    
+    mailtxt = render_template('registeToOperation.html', username=member, id=id, opdate=opdate,
+                                      users=list(users), server=RETURN_TO)
+    mailtxt = transform(html = mailtxt)
     return requests.post(
         "https://api.mailgun.net/v3/mail.ngc.org.il/messages",
         auth=("api", "key-6vcbt7a5dv8p754k3myvzqb5p8123ts5"),
@@ -217,8 +221,7 @@ def sendRegMessage(to, member, id, opdate):
               "to": to,
               "subject": u"רישום לפעולה במרכז דאייה נגב [%s]" % member,
               "text": u"נרשמת לפעולה במרכז הדאייה נגב ביום -  %s" % opdate,
-              "html": render_template('registeToOperation.html', username=member, id=id, opdate=opdate,
-                                      users=list(users), server=RETURN_TO),
+              "html": mailtxt,
               "o:tag": "registration"
         })
 
