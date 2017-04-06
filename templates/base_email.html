@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="he">
   <head>
 	{% block head %}
@@ -7,24 +7,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-
-  {% endblock %}
+      {% endblock %}
+      
+      <style>
+          body
+          {
+                background-color:white;
+          }
+          h1 {
+              font-size:15pt;
+          }
+          hr {
+              border: 1px dotted gray;
+          }
+          .subtitle {
+              font-size:12pt;color: gray;
+          }
+          .content
+          {
+              padding:0em 1.5em 0em 1.5em;
+          }
+      </style>
 
   </head>
 
-<body dir=rtl style="background-color:white;">
-<div align="center" style="">
+<body dir=rtl>
+
     <div>
             <img src="cid:logo.jpg" alt="ngc-logo">
-			<span style="font-size:15pt;">מערכת לרישום חברים לפעולות</span>
-			<span style="font-size:12pt;color: gray;">{% block subtitle %}{% endblock %}</span>
-			<hr style="border: 1px dotted gray;"/>
+			<h1>מערכת לרישום חברים לפעולות</h1>
+			<span class="subtitle">{% block subtitle %}{% endblock %}</span>
+			<hr/>
     </div>
     <div>
-            <span style="padding:0em 1.5em 0em 1.5em;">
-            {% block content %}{% endblock %}</span>
+            <div class="content">
+            {% block content %}{% endblock %}</div>
 
-  </div>
+     </div>
 
 	{% block footer %}
 	{% endblock %}
