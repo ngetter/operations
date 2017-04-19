@@ -101,11 +101,7 @@
         {% set btnMesage = {'buttonClass':'hidden'} %}
     {% endif %}
     
-    {% if user.username in ['ngetter@gmail.com','assaf@rangecom.co.il','gmamashome03@gmail.com', 'gmamashome03@gmail.co'] %}
-        {% set guestvisible = '' %}
-    {% else %}
-        {% set guestvisible = 'hidden' %}
-    {% endif %}
+
     <tr class='{{ buttonStatus.rowClass }}' id='{{ k._id }}'>
         <td ><span class="pull-right"><strong>{{ k['date'].strftime('%d.%m') }}</strong><br>{{ k['comment'] }}</span>
         </td>
