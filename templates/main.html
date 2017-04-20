@@ -1,7 +1,7 @@
 ﻿{% extends "base.html" %}
 {% block script %}
 <script>
-
+/*global $*/
     $.fn.editable.defaults.mode = 'inline';
     $(document).ready(function() {
         $('.editable').editable({
@@ -24,41 +24,44 @@
 			})
 			.done(function(str){
                 $('#length_' +  btn.data('id')).html(str.length);
-                btn.button('reset')
+                btn.button('reset');
                 if(str.participate==true) {
                     btn.html('<span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;משתתף');
                     btn.removeClass('btn-primary').addClass('btn-success');
-                    $('#' + btn.data('id')).removeClass('warning').addClass('success')
-					$('#personal_comment_' + btn.data('id')).removeClass('hidden')
+                    $('#' + btn.data('id')).removeClass('warning').addClass('success');
+					$('#personal_comment_' + btn.data('id')).removeClass('hidden');
                     }
                 else {
                     btn.html('<span class="glyphicon glyphicon-thumbs-down"></span>&nbsp;לא משתתף');
                     btn.removeClass('btn-success').addClass('btn-primary');
-                    $('#' + btn.data('id')).removeClass('success').addClass('warning')
-					$('#personal_comment_' + btn.data('id')).addClass('hidden')
+                    $('#' + btn.data('id')).removeClass('success').addClass('warning');
+					$('#personal_comment_' + btn.data('id')).addClass('hidden');
                     }
 				});
 
 	});
 
 	$('.txt-message').click(function(){
-		var btn = $(this)
+		var btn = $(this);
 
 		$.ajax({
 			method: 'POST',
 			url: 'add_message',
             dataType: 'json',
 			data: {id: btn.data('id'), username:'{{user.username}}'}
-			})
+			});
 	});
     
     $('.modal-list').click(function(){
-            $(".modal-content").html("<span>טוען...<span>")
+            $(".modal-content").html("<span>טוען...<span>");
             $.ajax({
                 method: 'GET',
                 url: $(this).attr('href')
             
-            }).done(function(str){$(".modal-content").html(str)});
+            }).done(function(str){
+                $(".modal-content").html(str);
+                
+            });
     });
     
 
@@ -82,7 +85,12 @@
   </div>
 </div>
 
+<!--
+<button type="button" class="btn btn-primary btn-xs">
+    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>הוסף פעולה</button>
 <div class="page-header">
+    -->
+    
 <h4>שתי פעולות קרובות</h4>
 </div>
 <table id="operations" class='table table-striped table-condensed' >
@@ -101,7 +109,11 @@
         {% set btnMesage = {'buttonClass':'hidden'} %}
     {% endif %}
     
-
+    {% if user.username in ['ngetter@gmail.com','assaf@rangecom.co.il','gmamashome03@gmail.com', 'gmamashome03@gmail.co'] %}
+        {% set guestvisible = '' %}
+    {% else %}
+        {% set guestvisible = 'hidden' %}
+    {% endif %}
     <tr class='{{ buttonStatus.rowClass }}' id='{{ k._id }}'>
         <td ><span class="pull-right"><strong>{{ k['date'].strftime('%d.%m') }}</strong><br>{{ k['comment'] }}</span>
         </td>

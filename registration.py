@@ -21,19 +21,17 @@ from logentries import LogentriesHandler
 from premailer import transform
 
 ###### configuration
-LOCAL = False # Make true if running from the IDE
-MONGO_LOCAL = LOCAL and False # Make true if running from the IDE and the mongod is running too on the local machine
-
-if LOCAL:
-    # SERVER_NAME = '127.0.0.1:5000'
-    RETURN_TO = 'http://127.0.0.1:5000'
-
-else:
-    # SERVER_NAME = r'http://ancient-beyond-8896.herokuapp.com:80'
+try:
+    LOCAL = os.getenv('C9_HOSTNAME')=="scheduleme-ngetter.c9users.io"# Make true if running from the IDE
+    MONGO_LOCAL = LOCAL and True # Make true if running from the IDE and the mongod is running too on the local machine
+    RETURN_TO = os.getenv('IP')
+except Exception:
+    LOCAL = False
+    MONGO_LOCAL = False
     RETURN_TO = r'http://opsign.herokuapp.com'
 
 if MONGO_LOCAL:
-    MONGODB_HOST = '127.0.0.1'
+    MONGODB_HOST = os.getenv('IP')
     MONGODB_PORT = 27017
     MONGODB_DATABASE = 'test'
 else:
@@ -72,7 +70,7 @@ def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static'),
                                'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
-@app.route('/add/<new_date>', methods=['GET'])
+@app.route('/api/add/<new_date>', methods=['GET'])
 def addDate(new_date):
     days = ["ראשון",
     "שני",
@@ -117,12 +115,12 @@ def index():
     else:
         return redirect(url_for('register'))
 
-@app.route('/api', methods=['POST', 'GET'])
+@app.route('/api/list', methods=['POST', 'GET'])
 def apiOperations():
     col = mdb['operations']
     l = col.find({'date': {'$gte': dt.now(None) - td(2)}}).sort("date", 1)
-    res = [d for d in l]
-    return jsonify(data=res, success=True)
+    res = list(d for d in l)
+    return bdumps(dict(data=res, success=True))
     
 def getOperations(username):
     col = mdb['operations']
@@ -236,7 +234,7 @@ def participants(id):
         new_par = [x['un'] for x in new_par]
         users = mdb['users'].find({"username": {"$in": r['participate'] + new_par}})
         l = list(users)
-        # print(r)
+        print(r)
         tmp = []
         for x in l:
             tmp = [t for t in r['participate']
@@ -249,9 +247,9 @@ def participants(id):
                 try:
                     x['position'] = mytor(int(r['first']), int(x['position']))
                 except ValueError:
-                    x['position'] = 65
+                    x['position'] = 1
             else:
-                x['position'] = 65
+                x['position'] = 1
 
         part = sorted(l, key=lambda k: k['position'])
         return render_template('participants.html', l=part, operation=r)
