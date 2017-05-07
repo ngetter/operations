@@ -218,7 +218,7 @@ def sendRegMessage(to, member, id, opdate):
     return requests.post(
         "https://api.mailgun.net/v3/mail.ngc.org.il/messages",
         auth=("api", "key-6vcbt7a5dv8p754k3myvzqb5p8123ts5"),
-        files=[("inline", open("static/img/logo.jpg", "rb"))],
+        files=[("inline", open("static/img/logo.png", "rb"))],
         data={"from": "מערכת רישום לפעולה - מדנ <postmaster@nir.mailgun.org>",
               "to": to,
               "subject": u"רישום לפעולה במרכז דאייה נגב [%s]" % member,

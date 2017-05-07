@@ -7,26 +7,18 @@
 
 
   "icons": [
+
     {
-      "src": "https://res.cloudinary.com/ngc/image/upload/s--FMKv3xwp--/c_imagga_scale,h_48,w_48/v1435168839/logo_asibmm.jpg",
-      "type": "image/png",
-      "sizes": "48x48"
-    },
-    {
-      "src": "https://res.cloudinary.com/ngc/image/upload/s--FMKv3xwp--/c_imagga_scale,h_96,w_96/v1435168839/logo_asibmm.jpg",
-      "type": "image/png",
-      "sizes": "96x96"
-    },
-    {
-      "src": "https://res.cloudinary.com/ngc/image/upload/s--FMKv3xwp--/c_imagga_scale,h_192,w_192/v1435168839/logo_asibmm.jpg",
+      "src": "img/logo_192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "https://res.cloudinary.com/ngc/image/upload/s--FMKv3xwp--/c_imagga_scale,h_144,w_144/v1435168839/logo_asibmm.jpg",
+      "src": "img/logo_48.png",
       "type": "image/png",
-      "sizes": "144x144"
+      "sizes": "48x48"
     }
+
   ],
   "start_url": "/"
 }
