@@ -64,7 +64,11 @@ class frmRegistration(Form):
     # recaptcha = RecaptchaField()
     plname = TextField(u'שם פרטי ושם משפחה', validators=[DataRequired(u'יש להקליד שם')])
 
-
+@app.before_request
+def beforeRequest():
+    if not request.url.startswith('https'):
+        return redirect(request.url.replace('http', 'https', 1))
+        
 @app.route('/favicon.ico')
 def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static'),
