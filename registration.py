@@ -67,7 +67,7 @@ class frmRegistration(Form):
 @app.route('/favicon.ico')
 def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static'),
-                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
+                               'ico/favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 @app.route('/service-worker.js')
 def serviceworker():
