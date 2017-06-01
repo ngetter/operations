@@ -387,9 +387,9 @@ def sendWeeklyEmail(fri,fri_guests, sat, sat_guests):
     r = requests.post(
         "https://api.mailgun.net/v3/mail.ngc.org.il/messages",
         auth=("api", "key-6vcbt7a5dv8p754k3myvzqb5p8123ts5"),
-        files=[("inline", open("static/img/logo.jpg", "rb"))],
+        files=[("inline", open("static/img/logo_48.png", "rb"))],
         data={"from": "Nir Getter <ngetter@gmail.com>",
-              "to": ["Ngc@savoray.com"],
+              "to": ["ngetter@campus.haifa.ac.il"],
               "subject": u"תזכורת בנוגע לרישום לפעולה במדנ לסוף השבוע הקרוב",
               "text": u"תזכורת בנוגע לרישום לפעולה במדנ לסוף השבוע הקרוב",
               "html": html,
