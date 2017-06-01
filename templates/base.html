@@ -100,12 +100,49 @@
     <script src="/static/js/jquery-1.10.2.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
-	<script src="/static/js/bootstrap-switch.min.js"></script>
-	<script type="text/javascript" >
+  	<script src="/static/js/bootstrap-switch.min.js"></script>
+  	<script type="text/javascript" >
+	
+    function subscribeUserToPush(registration) {
+        return getSWRegistration()
+        .then(function(registration) {
+          const subscribeOptions = {
+            userVisibleOnly: true,
+            applicationServerKey: urlBase64ToUint8Array(
+              'BLIhoFVCreJakpnhCiUxPcbS3cZcFmn9PV30-NOuVuQ84nenlOXn2v29NyQstr_JFhjOidEPrbhhZwEYX4XKaDU'
+            )
+          };
+      
+          return registration.pushManager.subscribe(subscribeOptions);
+        })
+        .then(function(pushSubscription) {
+          console.log('Received PushSubscription: ', JSON.stringify(pushSubscription));
+          return pushSubscription;
+        });
+      }
+            
+    function askPermission() {
+    return new Promise(function(resolve, reject) {
+      const permissionResult = Notification.requestPermission(function(result) {
+        resolve(result);
+      });
+    
+      if (permissionResult) {
+        permissionResult.then(resolve, reject);
+      }
+    })
+    .then(function(permissionResult) {
+      if (permissionResult !== 'granted') {
+        throw new Error('We weren\'t granted permission.');
+      }
+    });
+    }
+    
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
         navigator.serviceWorker.register('/service-worker.js').then(function(registration) {
           // Registration was successful
+          askPermission().then(subscribeUserToPush());
           console.log('ServiceWorker registration successful with scope: ', registration.scope);
           }, function(err) {
             // registration failed :(
@@ -113,6 +150,7 @@
               });
             });
           }
+          
 
 	</script>
 	{% endblock %}
