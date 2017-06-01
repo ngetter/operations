@@ -389,7 +389,7 @@ def sendWeeklyEmail(fri,fri_guests, sat, sat_guests):
         auth=("api", "key-6vcbt7a5dv8p754k3myvzqb5p8123ts5"),
         files=[("inline", open("static/img/logo_48.png", "rb"))],
         data={"from": "Nir Getter <ngetter@gmail.com>",
-              "to": ["ngetter@campus.haifa.ac.il"],
+              "to": ["Ngc@savoray.com"],
               "subject": u"תזכורת בנוגע לרישום לפעולה במדנ לסוף השבוע הקרוב",
               "text": u"תזכורת בנוגע לרישום לפעולה במדנ לסוף השבוע הקרוב",
               "html": html,
