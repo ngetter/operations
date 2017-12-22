@@ -95,8 +95,7 @@ def addDate(new_date):
 def deleteOperation(del_date):
     nds = del_date.split("-") #new_date split
     ndate = dt( int(nds[0]), int(nds[1]), int(nds[2]) )
-    op = mdb['operations'].find_one({"date": ndate})
-    op.delete()
+    mdb['operations'].remove({"date": ndate})
     return jsonify(data=str(ndate), success=True)
 
 
