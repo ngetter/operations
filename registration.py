@@ -93,8 +93,10 @@ def addDate(new_date):
     
 @app.route('/api/delete/<del_date>', methods=['GET'])
 def deleteOperation(del_date):
-    mdb['operations'].deleteOne({"date": del_date})
-    return jsonify(data=str(del_date), success=True)
+    nds = del_date.split("-") #new_date split
+    ndate = dt( int(nds[0]), int(nds[1]), int(nds[2]) )
+    mdb['operations'].deleteOne({"date": ndate})
+    return jsonify(data=str(ndate), success=True)
 
 
 @app.route('/index')
