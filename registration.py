@@ -96,6 +96,7 @@ def deleteOperation(del_date):
     nds = del_date.split("-") #new_date split
     ndate = dt( int(nds[0]), int(nds[1]), int(nds[2]) )
     op = mdb['operations'].find({"date": ndate})
+    op.remove()
     return jsonify(data=str(op), success=True)
 
 
