@@ -91,7 +91,7 @@ def addDate(new_date):
 
 
     
-@app.route('/api/delete/<del_date>', methods=['POST'])
+@app.route('/api/delete/<del_date>', methods=['GET'])
 def deleteOperation(del_date):
     mdb['operations'].deleteOne({"date": del_date})
     return jsonify(data=str(del_date), success=True)
