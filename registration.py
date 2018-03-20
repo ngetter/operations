@@ -94,7 +94,14 @@ def addDate(new_date):
 
 
     
-    
+@app.route('/api/delete/<del_date>', methods=['GET'])
+def deleteOperation(del_date):
+    nds = del_date.split("-") #new_date split
+    ndate = dt( int(nds[0]), int(nds[1]), int(nds[2]) )
+    mdb['operations'].remove({"date": ndate})
+    return jsonify(data=str(ndate), success=True)
+
+
 @app.route('/index')
 @app.route('/', methods=['POST', 'GET'])
 def index():
@@ -221,7 +228,7 @@ def sendRegMessage(to, member, id, opdate):
     mailtxt = transform(html = mailtxt)
     return requests.post(
         "https://api.mailgun.net/v3/mail.ngc.org.il/messages",
-        auth=("api", "key-6vcbt7a5dv8p754k3myvzqb5p8123ts5"),
+        auth=("api", os.getenv('MAILGUN_KEY','')),
         files=[("inline", open("static/img/logo.png", "rb"))],
         data={"from": "מערכת רישום לפעולה - מדנ <postmaster@nir.mailgun.org>",
               "to": to,
@@ -390,7 +397,7 @@ def sendWeeklyEmail(fri,fri_guests, sat, sat_guests):
     html = transform(html)
     r = requests.post(
         "https://api.mailgun.net/v3/mail.ngc.org.il/messages",
-        auth=("api", "key-6vcbt7a5dv8p754k3myvzqb5p8123ts5"),
+        auth=("api", os.getenv('MAILGUN_KEY','')),
         files=[("inline", open("static/img/logo_48.png", "rb"))],
         data={"from": "Nir Getter <ngetter@gmail.com>",
               "to": ["Ngc@savoray.com"],
