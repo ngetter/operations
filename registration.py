@@ -12,6 +12,8 @@ from flask import Flask, Markup, request, redirect, url_for, session, escape, re
     send_from_directory, jsonify
 from flask_mongokit import MongoKit
 from flask_wtf import Form
+from flask_cors import CORS
+
 from wtforms import TextField
 from wtforms.validators import DataRequired, Email
 from bson.objectid import ObjectId
@@ -47,6 +49,7 @@ TOR_SIZE = 64
 
 app = Flask(__name__)
 app.config.from_object(__name__)
+CORS(app)
 
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
@@ -95,6 +98,7 @@ def addDate(new_date):
 @app.route('/index')
 @app.route('/', methods=['POST', 'GET'])
 def index():
+    print ("hi i am index")
     rule = request.url_rule
     print (rule.rule)
     if 'username' in session:
