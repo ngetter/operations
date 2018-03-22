@@ -2,28 +2,48 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map'
+import { D2S } from '../../pipes/d2s';
+
 @Component({
-  templateUrl: 'build/pages/home/home.html'
+  templateUrl: 'build/pages/home/home.html',
+  pipes: [D2S]
 })
 export class HomePage {
   operations: any;
+
   constructor(public navCtrl: NavController, public http: Http) {
 
         this.http.get('https://opsign.herokuapp.com/api/list').map(res => res.json()).subscribe(data =>{
           this.operations = data.data;
-          console.log (this.operations);
         });
-      console.log('WOHA STARTING');
-       this.operations = [
-            {'date':'06.3','instructor':'זוהר דה ולאנסה','color':'secondary'},
-            {'date':'07.3','instructor':'יצחק חלפי','color':'secondary'},
-            {'date':'23.3','instructor':'יצחק חלפי','color':'secondary'},
-            {'date':'24.3','instructor':'שחר גולדברג','color':'secondary'}
-        ];
- 
+        
+        //TODO: search on each operation.participants for user email. if exsists mark mein = true
+
+        localStorage.setItem('user', 'ngetter@gmail.com');
     }
   
   me2(item){
-    item.color = 'danger';
+      let user = localStorage.getItem('user');
+      let body = {id: item._id, username:user};
+      console.log(body);
+      
+      this.http.post('https://opsign.herokuapp.com/mark_arrival',  JSON.stringify(body));
+    if (('bgcolor' in item) && item.bcolor == 'secondary'){
+      item.bcolor='primary';
+      //TODO: send get request to exclude user from participants
+      item.pilots -= 1;
+    }
+    else{
+      item.bcolor='secondary';
+      //TODO: send get request to include user in participants
+
+
+      if ('pilots' in item)
+        item.pilots += 1;
+      else
+        item.pilots = 1;
+    }
+    
+    
   }
 }

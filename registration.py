@@ -276,13 +276,16 @@ def participants(id):
 @app.route('/mark_arrival/<int:id>', methods=['GET'])
 def arrival(id=None):
     print("arrival function %s" % request.method)
-    try:
-        un = escape(session['username'])
-    except:
-        return redirect(url_for('register'))
-
     if request.method == 'POST':
-        id = request.form['id']
+        un = request.form['username'] 
+    else:
+        try:
+            un = escape(session['username'])
+        except:
+            return redirect(url_for('register'))
+    
+        if request.method == 'POST':
+            id = request.form['id']
 
     # un = "ngc-registration@balistica.org"
     con = mdb['operations']

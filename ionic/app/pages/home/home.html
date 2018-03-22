@@ -9,8 +9,32 @@
 <ion-content padding>
 <ion-card *ngFor="let item of operations">
   <ion-card-header>
-  <ion-card-title>{{item.date}}</ion-card-title>
+
+          <ion-card-title>{{item.comment}} {{item.date | d2s | date:"dd/MM"}}</ion-card-title>
+          
+
   </ion-card-header>
+  <ion-card-content>
+    
+    <ion-grid>
+      <ion-row>
+                   <ion-col col-15><button ion-button [color]="item.bcolor" (click)="me2(item)" block><ion-icon name="thumbs-up"></ion-icon> משתתף  </button></ion-col>
+
+          <ion-col col-3><ion-buttons right>
+            <button ion-button color="light" (click)="me2(item)" icon-right block>פרטים<ion-icon name="search"></ion-icon></button>
+            </ion-buttons>
+            </ion-col>
+            
+      </ion-row>
+      <ion-row>
+        <ion-col><ion-label><ion-icon name="paper-plane"></ion-icon> טייסים</ion-label><ion-badge item-middle>{{item.pilots}}</ion-badge></ion-col>
+        <ion-col><ion-label><ion-icon name="school"></ion-icon> סוליסטים</ion-label><ion-badge item-end>{{item.solists}}</ion-badge></ion-col>
+        <ion-col><ion-label><ion-icon name="rose"></ion-icon> חניכים</ion-label><ion-badge item-end>{{item.cadets}}</ion-badge></ion-col>
+        <ion-col><ion-label><ion-icon name="man"></ion-icon> אורחים</ion-label><ion-badge item-end>{{item.guests}}</ion-badge></ion-col>
+      </ion-row>  
+    </ion-grid>
+    
+  </ion-card-content>
 </ion-card>
 
 </ion-content>
