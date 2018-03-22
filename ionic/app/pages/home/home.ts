@@ -20,15 +20,12 @@ export class HomePage {
         //TODO: search on each operation.participants for user email. if exsists mark mein = true
 
         localStorage.setItem('user', 'ngetter@gmail.com');
+        
     }
   
   me2(item){
-      let user = localStorage.getItem('user');
-      let body = {id: item._id, username:user};
-      console.log(body);
-      
-      this.http.post('https://opsign.herokuapp.com/mark_arrival',  JSON.stringify(body));
-    if (('bgcolor' in item) && item.bcolor == 'secondary'){
+    
+    if (('bcolor' in item) && item.bcolor == 'secondary'){
       item.bcolor='primary';
       //TODO: send get request to exclude user from participants
       item.pilots -= 1;
@@ -36,6 +33,11 @@ export class HomePage {
     else{
       item.bcolor='secondary';
       //TODO: send get request to include user in participants
+      let user = localStorage.getItem('user');
+      let body = {id: item._id, username:user};
+      console.log(body);
+      console.log(item);
+      this.http.post('https://opsign.herokuapp.com/mark_arrival',  JSON.stringify(body)).subscribe((result)=> {console.log(result)});
 
 
       if ('pilots' in item)

@@ -279,11 +279,12 @@ def arrival(id=None):
     try:
         un = escape(session['username'])
     except:
-        return redirect(url_for('register'))
+        #return redirect(url_for('register'))
+        un = request.form['username']
 
     if request.method == 'POST':
         id = request.form['id']
-
+        
     # un = "ngc-registration@balistica.org"
     con = mdb['operations']
     r = con.find_one({'_id': ObjectId(id)})
