@@ -251,7 +251,7 @@ def participants(id = None):
 
         new_par = [x for x in r['participate'] if isinstance(x, dict)]
         new_par = [x['un'] for x in new_par]
-        users = mdb['users'].find({"username": {"$in": r['participate'] + new_par}})
+        users = mdb['users'].find({"username": {"$in": r['participate'] + new_par}},{"_id":0})
         l = list(users)
         print(l)
         print(r)
