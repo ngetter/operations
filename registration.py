@@ -253,6 +253,7 @@ def participants(id = None):
         new_par = [x['un'] for x in new_par]
         users = mdb['users'].find({"username": {"$in": r['participate'] + new_par}})
         l = list(users)
+        print(l)
         print(r)
         tmp = []
         for x in l:
