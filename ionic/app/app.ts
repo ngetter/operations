@@ -3,6 +3,7 @@ import { ionicBootstrap, Platform } from 'ionic-angular';
 import { StatusBar } from 'ionic-native';
 
 import { HomePage } from './pages/home/home';
+import { SigninPage } from './pages/signin/signin';
 
 
 @Component({

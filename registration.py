@@ -273,19 +273,18 @@ def participants(id):
 
 
 @app.route('/mark_arrival', methods=['POST'])
-@app.route('/mark_arrival/<int:id>', methods=['GET'])
-def arrival(id=None):
+#@app.route('/mark_arrival/<int:id>', methods=['GET'])
+def arrival():
     print("arrival function %s" % request.method)
+    content = request.json
+    return content
     try:
         un = escape(session['username'])
     except:
-        #return redirect(url_for('register'))
-        un = request.form['username']
+        return redirect(url_for('register'))
 
-    if request.method == 'POST':
-        id = request.form['id']
+    id = request.form['id']
         
-    # un = "ngc-registration@balistica.org"
     con = mdb['operations']
     r = con.find_one({'_id': ObjectId(id)})
 

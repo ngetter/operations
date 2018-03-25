@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
-import { Http } from '@angular/http';
+import { NavController, ModalController } from 'ionic-angular';
+import { Http, Headers, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/map'
 import { D2S } from '../../pipes/d2s';
+import { ParticipantsPage } from '../participants/participants';
+import { SigninPage } from '../signin/signin';
 
 @Component({
   templateUrl: 'build/pages/home/home.html',
@@ -11,7 +13,7 @@ import { D2S } from '../../pipes/d2s';
 export class HomePage {
   operations: any;
 
-  constructor(public navCtrl: NavController, public http: Http) {
+  constructor(public navCtrl: NavController, public http: Http, private modalCtrl: ModalController) {
 
         this.http.get('https://opsign.herokuapp.com/api/list').map(res => res.json()).subscribe(data =>{
           this.operations = data.data;
@@ -19,12 +21,14 @@ export class HomePage {
         
         //TODO: search on each operation.participants for user email. if exsists mark mein = true
 
-        localStorage.setItem('user', 'ngetter@gmail.com');
-        
     }
   
+  participants(item){
+    let participants = item.participate;
+    this.navCtrl.push(ParticipantsPage, {participants: participants});
+  }
+  
   me2(item){
-    
     if (('bcolor' in item) && item.bcolor == 'secondary'){
       item.bcolor='primary';
       //TODO: send get request to exclude user from participants
@@ -34,10 +38,22 @@ export class HomePage {
       item.bcolor='secondary';
       //TODO: send get request to include user in participants
       let user = localStorage.getItem('user');
-      let body = {id: item._id, username:user};
-      console.log(body);
-      console.log(item);
-      this.http.post('https://opsign.herokuapp.com/mark_arrival',  JSON.stringify(body)).subscribe((result)=> {console.log(result)});
+      if (user==null){
+        let myModal = this.modalCtrl.create(SigninPage);
+        myModal.onDidDismiss(data => {
+          console.log(data);
+        });
+        myModal.present();
+      }
+      
+      var headers = new Headers();
+      headers.append("Accept", 'application/json');
+      headers.append('Content-Type', 'application/json' );
+      let options = new RequestOptions({ headers: headers });
+      let body = JSON.stringify({id: item._id.$oid, username: user});
+
+      this.http.post('https://opsign.herokuapp.com/mark_arrival',  body, options)
+      .subscribe((result)=> {console.log(result)});
 
 
       if ('pilots' in item)
