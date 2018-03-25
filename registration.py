@@ -319,7 +319,7 @@ def arrival():
             r['participate'].append(dict(un=un))
 
             logen.info('%s chacked in to %s' % (un, r['date']))
-            sendRegMessage(un, session['plname'], id, r['date'])
+            #sendRegMessage(un, session['plname'], id, r['date'])
             print('%s chacked in to %s' % (un, r['date']))
             con.save(r)
             return dumps({'participate': True, 'length': len(list(r['participate']))})
