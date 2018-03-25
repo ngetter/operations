@@ -278,13 +278,17 @@ def arrival():
     print("arrival function %s" % request.method)
     content = request.get_json(silent=True)
     print content
+    un = None
     try:
         un = escape(session['username'])
+        print 'username set from session %s' % un
     except:
         pass
         #return redirect(url_for('register'))
         #un = request.form['username']
-
+    if un is None
+        un = content['username']
+        print('username set from POST json request %s' % un)
     id = request.form['id']
         
     con = mdb['operations']
