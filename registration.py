@@ -273,13 +273,14 @@ def participants(id):
 
 
 @app.route('/mark_arrival', methods=['POST'])
-#@app.route('/mark_arrival/<int:id>', methods=['GET'])
+@app.route('/mark_arrival/<int:id>', methods=['GET'])
 def arrival():
     print("arrival function %s" % request.method)
     try:
         un = escape(session['username'])
     except:
-        return redirect(url_for('register'))
+        pass
+        #return redirect(url_for('register'))
         #un = request.form['username']
 
     id = request.form['id']
