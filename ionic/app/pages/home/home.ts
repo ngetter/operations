@@ -29,43 +29,36 @@ export class HomePage {
   }
   
   me2(item){
-    if (('bcolor' in item) && item.bcolor == 'secondary'){
-      item.bcolor='primary';
-      //TODO: send get request to exclude user from participants
-      item.pilots -= 1;
-    }
-    else{
-      item.bcolor='secondary';
-      //TODO: send get request to include user in participants
-      let user = localStorage.getItem('user');
-      if (user==null){
-        let myModal = this.modalCtrl.create(SigninPage);
-        myModal.onDidDismiss(data => {
-          console.log(data);
-        });
-        myModal.present();
-      }
-      
-      var headers = new Headers();
-      headers.append("Accept", 'application/json');
-      headers.append('Content-Type', 'application/json' );
-      let options = new RequestOptions({ headers: headers });
-      let body = JSON.stringify({id: item._id.$oid, username: user});
-
-      this.http.post('https://opsign.herokuapp.com/mark_arrival',  body, options)
-      .map(data => data.json()).subscribe(result => {
-        if ('pilots' in item)
-          item.pilots += 1;
-        else
-          item.pilots = 1;
-        console.log(result)
-        item.cadets = result.length;
+    //TODO: send get request to include user in participants
+    let user = localStorage.getItem('user');
+    if (user==null){
+      let myModal = this.modalCtrl.create(SigninPage);
+      myModal.onDidDismiss(data => {
+        console.log(data);
       });
-
-
-
+      myModal.present();
     }
     
-    
+    var headers = new Headers();
+    headers.append("Accept", 'application/json');
+    headers.append('Content-Type', 'application/json' );
+    let options = new RequestOptions({ headers: headers });
+    let body = JSON.stringify({id: item._id.$oid, username: user});
+
+    this.http.post('https://opsign.herokuapp.com/mark_arrival',  body, options)
+    .map(data => data.json()).subscribe(result => {
+      console.log(result);
+      if (result.participate)
+        item.bcolor='secondary';
+      else
+        item.bcolor = 'primary';
+      item.cadets = result.length;
+    });
+
+
+
   }
+    
+    
 }
+

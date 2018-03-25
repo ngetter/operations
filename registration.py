@@ -273,7 +273,6 @@ def participants(id):
 
 
 @app.route('/mark_arrival', methods=['POST'])
-#@app.route('/mark_arrival/<int:id>', methods=['GET'])
 def arrival():
     print("arrival function %s" % request.method)
     content = request.get_json(silent=True)
@@ -305,18 +304,14 @@ def arrival():
             print('%s chacked out from %s' % (un, r['date']))
             logen.info('%s chacked out from %s' % (un, r['date']))
             con.save(r)
-            if request.method == 'POST':
-                return dumps({'participate': False, 'length': len(list(r['participate']))})
-            else:
-                return render_template('unregisterConfirm.html', opdate=r['date'], plname=session['plname'])
+            return dumps({'participate': False, 'length': len(list(r['participate']))})
+
         elif len(new_par) > 0: 
             print (new_par[0])
             r['participate'].remove(new_par[0])
             con.save(r)
-            if request.method == 'POST':
-                return dumps({'participate': False, 'length': len(list(r['participate']))})
-            else:
-                return render_template('unregisterConfirm.html', opdate=r['date'], plname=session['plname'])
+            return dumps({'participate': False, 'length': len(list(r['participate']))})
+
         else: # append new participant to operation member list
             r['participate'].append(dict(un=un))
 
@@ -324,10 +319,7 @@ def arrival():
             sendRegMessage(un, session['plname'], id, r['date'])
             print('%s chacked in to %s' % (un, r['date']))
             con.save(r)
-            if request.method == 'POST':
-                return dumps({'participate': True, 'length': len(list(r['participate']))})
-            else:
-                return 'נוסף לרשימת המשתתפים בפעולה'
+            return dumps({'participate': True, 'length': len(list(r['participate']))})
 
     except TypeError:
         logen.error('Type Error in arrival() [/%s] %s' % (request.method, id))
