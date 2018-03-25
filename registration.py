@@ -331,7 +331,7 @@ def arrival():
     except ValueError:
         return 'ValueError'
     except KeyError:
-        print('KeyError')
+        print('####### KeyError adding a new participant (removing everyone else')
         r['participate'] = [dict(un=un)]
         logen.info('%s chacked in to %s' % (un, r['date']))
         #sendRegMessage(un, session['plname'], id, r['date'])
