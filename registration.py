@@ -272,7 +272,7 @@ def participants(id = None):
 
         part = sorted(l, key=lambda k: k['position'])
         if request.method == 'POST':
-            return dumps(l)
+            return dumps(part)
         else:
             return render_template('participants.html', l=part, operation=r)
     except KeyError:
