@@ -300,6 +300,7 @@ def arrival():
         print(len(new_par))  #new_par = [x['un'] for x in new_par]
 
         if un in r['participate']: # remove participant already listed to op
+            print ('#########  the un in r[participate] condition')
             r['participate'].remove(un)
             print('%s chacked out from %s' % (un, r['date']))
             logen.info('%s chacked out from %s' % (un, r['date']))
@@ -307,12 +308,14 @@ def arrival():
             return dumps({'participate': False, 'length': len(list(r['participate']))})
 
         elif len(new_par) > 0: 
+            print ('#########  the len(new_par) > 0 condition')
             print (new_par[0])
             r['participate'].remove(new_par[0])
             con.save(r)
             return dumps({'participate': False, 'length': len(list(r['participate']))})
 
         else: # append new participant to operation member list
+            print ('#########  the append new participant to operation member list condition')
             r['participate'].append(dict(un=un))
 
             logen.info('%s chacked in to %s' % (un, r['date']))
