@@ -302,8 +302,8 @@ def arrival():
 
         if un in r['participate']: # remove participant already listed to op
             r['participate'].remove(un)
-            print('%s chacked out from %s' % (session['username'], r['date']))
-            logen.info('%s chacked out from %s' % (session['username'], r['date']))
+            print('%s chacked out from %s' % (un, r['date']))
+            logen.info('%s chacked out from %s' % (un, r['date']))
             con.save(r)
             if request.method == 'POST':
                 return dumps({'participate': False, 'length': len(list(r['participate']))})
@@ -320,9 +320,9 @@ def arrival():
         else: # append new participant to operation member list
             r['participate'].append(dict(un=un))
 
-            logen.info('%s chacked in to %s' % (session['username'], r['date']))
-            sendRegMessage(session['username'], session['plname'], id, r['date'])
-            print('%s chacked in to %s' % (session['username'], r['date']))
+            logen.info('%s chacked in to %s' % (un, r['date']))
+            sendRegMessage(un, session['plname'], id, r['date'])
+            print('%s chacked in to %s' % (un, r['date']))
             con.save(r)
             if request.method == 'POST':
                 return dumps({'participate': True, 'length': len(list(r['participate']))})
@@ -338,8 +338,8 @@ def arrival():
     except KeyError:
         print('KeyError')
         r['participate'] = [dict(un=un)]
-        logen.info('%s chacked in to %s' % (session['username'], r['date']))
-        sendRegMessage(session['username'], session['plname'], id, r['date'])
+        logen.info('%s chacked in to %s' % (un, r['date']))
+        sendRegMessage(un, session['plname'], id, r['date'])
         con.save(r)
         return dumps({'participate': True, 'length': len(list(r['participate']))})
 
