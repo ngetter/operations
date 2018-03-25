@@ -286,7 +286,7 @@ def arrival():
         pass
         #return redirect(url_for('register'))
         #un = request.form['username']
-    if un is None
+    if un is None:
         un = content['username']
         print('username set from POST json request %s' % un)
     id = request.form['id']
