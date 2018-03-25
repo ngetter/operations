@@ -277,13 +277,13 @@ def participants(id):
 def arrival():
     print("arrival function %s" % request.method)
     content = request.json
-    return content
+
     try:
         un = escape(session['username'])
     except:
-        return redirect(url_for('register'))
+        un = content['email']
 
-    id = request.form['id']
+    id = content['id']
         
     con = mdb['operations']
     r = con.find_one({'_id': ObjectId(id)})
