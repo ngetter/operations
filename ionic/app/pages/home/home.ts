@@ -24,8 +24,19 @@ export class HomePage {
     }
   
   participants(item){
-    let participants = item.participate;
-    this.navCtrl.push(ParticipantsPage, {participants: participants});
+  
+    var headers = new Headers();
+    headers.append("Accept", 'application/json');
+    headers.append('Content-Type', 'application/json' );
+    let options = new RequestOptions({ headers: headers });
+    let body = JSON.stringify({id: item._id.$oid});
+    console.log(body);
+    this.http.post('https://opsign.herokuapp.com/api/getparticipants',body,options)
+    .map(res => res.json()).subscribe(data =>{
+          console.log(data);
+          this.navCtrl.push(ParticipantsPage, {participants: data.data});
+    });
+    
   }
   
   me2(item){

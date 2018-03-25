@@ -238,10 +238,14 @@ def sendRegMessage(to, member, id, opdate):
               "o:tag": "registration"
         })
 
-
+@app.route('/api/getparticipants', methods=['POST'])
 @app.route('/participants/<ObjectId:id>')
 def participants(id):
     con = mdb['operations']
+    if request.method == 'POST':
+        jsonres = request.get_json()
+        id = jsonres['id']
+        
     r = con.find_one({'_id': ObjectId(id)})
     try:
 
@@ -267,7 +271,10 @@ def participants(id):
                 x['position'] = 1
 
         part = sorted(l, key=lambda k: k['position'])
-        return render_template('participants.html', l=part, operation=r)
+        if request.method == 'POST':
+            return dumps(l)
+        else:
+            return render_template('participants.html', l=part, operation=r)
     except KeyError:
         return render_template('participants.html', l=[], operation=r)
 
