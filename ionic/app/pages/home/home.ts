@@ -53,13 +53,17 @@ export class HomePage {
       let body = JSON.stringify({id: item._id.$oid, username: user});
 
       this.http.post('https://opsign.herokuapp.com/mark_arrival',  body, options)
-      .subscribe((result)=> {console.log(result)});
+      .map(data => data.json()).subscribe(result => {
+        if ('pilots' in item)
+          item.pilots += 1;
+        else
+          item.pilots = 1;
+        console.log(result)
+        item.cadets = result.length;
+      });
 
 
-      if ('pilots' in item)
-        item.pilots += 1;
-      else
-        item.pilots = 1;
+
     }
     
     

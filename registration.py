@@ -273,7 +273,7 @@ def participants(id):
 
 
 @app.route('/mark_arrival', methods=['POST'])
-@app.route('/mark_arrival/<int:id>', methods=['GET'])
+#@app.route('/mark_arrival/<int:id>', methods=['GET'])
 def arrival():
     print("arrival function %s" % request.method)
     content = request.get_json(silent=True)
@@ -339,7 +339,7 @@ def arrival():
         print('KeyError')
         r['participate'] = [dict(un=un)]
         logen.info('%s chacked in to %s' % (un, r['date']))
-        sendRegMessage(un, session['plname'], id, r['date'])
+        #sendRegMessage(un, session['plname'], id, r['date'])
         con.save(r)
         return dumps({'participate': True, 'length': len(list(r['participate']))})
 
