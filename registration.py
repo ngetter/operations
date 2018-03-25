@@ -240,7 +240,7 @@ def sendRegMessage(to, member, id, opdate):
 
 @app.route('/api/getparticipants', methods=['POST'])
 @app.route('/participants/<ObjectId:id>')
-def participants(id):
+def participants(id = None):
     con = mdb['operations']
     if request.method == 'POST':
         jsonres = request.get_json()
