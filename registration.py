@@ -276,6 +276,8 @@ def participants(id):
 @app.route('/mark_arrival/<int:id>', methods=['GET'])
 def arrival():
     print("arrival function %s" % request.method)
+    content = request.get_json(silent=True)
+    print content
     try:
         un = escape(session['username'])
     except:
