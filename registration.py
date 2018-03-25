@@ -288,8 +288,10 @@ def arrival():
         #un = request.form['username']
     if un is None:
         un = content['username']
-        print('username set from POST json request %s' % un)
-    id = request.form['id']
+        id = content['id']
+        print('username & id set from POST json request %s, %s' % (id, un))
+    else:
+        id = request.form['id']
         
     con = mdb['operations']
     r = con.find_one({'_id': ObjectId(id)})
