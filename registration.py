@@ -276,14 +276,13 @@ def participants(id):
 #@app.route('/mark_arrival/<int:id>', methods=['GET'])
 def arrival():
     print("arrival function %s" % request.method)
-    content = request.json
-
     try:
         un = escape(session['username'])
     except:
-        un = content['email']
+        return redirect(url_for('register'))
+        #un = request.form['username']
 
-    id = content['id']
+    id = request.form['id']
         
     con = mdb['operations']
     r = con.find_one({'_id': ObjectId(id)})
