@@ -2,13 +2,16 @@ import { Component } from '@angular/core';
 import { NavController, ModalController } from 'ionic-angular';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/map'
+
 import { D2S } from '../../pipes/d2s';
+import { Exists } from '../../pipes/exists';
+
 import { ParticipantsPage } from '../participants/participants';
 import { SigninPage } from '../signin/signin';
 
 @Component({
   templateUrl: 'build/pages/home/home.html',
-  pipes: [D2S]
+  pipes: [D2S, Exists]
 })
 export class HomePage {
   operations: any;
@@ -34,7 +37,7 @@ export class HomePage {
     this.http.post('https://opsign.herokuapp.com/api/getparticipants',body,options)
     .map(res => res.json()).subscribe(data =>{
           console.log(data);
-          this.navCtrl.push(ParticipantsPage, {participants: data.data});
+          this.navCtrl.push(ParticipantsPage, {participants: data});
     });
     
   }

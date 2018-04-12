@@ -15,6 +15,7 @@ export class ParticipantsPage {
   
   constructor(private navCtrl: NavController, private params: NavParams) {
     this.participants = this.params.get('participants')  ;
+    console.log(this.participants);
   }
 
 }

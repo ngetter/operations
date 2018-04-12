@@ -101,7 +101,13 @@ def deleteOperation(del_date):
     mdb['operations'].remove({"date": ndate})
     return jsonify(data=str(ndate), success=True)
 
-
+@app.route('/api/list', methods=['POST', 'GET'])
+def apiOperations():
+    col = mdb['operations']
+    l = col.find({'date': {'$gte': dt.now(None) - td(2)}}).sort("date", 1)
+    res = list(d for d in l)
+    return bdumps(dict(data=res, success=True))
+    
 @app.route('/index')
 @app.route('/', methods=['POST', 'GET'])
 def index():
@@ -130,12 +136,7 @@ def index():
     else:
         return redirect(url_for('register'))
 
-@app.route('/api/list', methods=['POST', 'GET'])
-def apiOperations():
-    col = mdb['operations']
-    l = col.find({'date': {'$gte': dt.now(None) - td(2)}}).sort("date", 1)
-    res = list(d for d in l)
-    return bdumps(dict(data=res, success=True))
+
     
 def getOperations(username):
     col = mdb['operations']
@@ -230,7 +231,7 @@ def sendRegMessage(to, member, id, opdate):
         "https://api.mailgun.net/v3/mail.ngc.org.il/messages",
         auth=("api", os.getenv('MAILGUN_KEY','')),
         files=[("inline", open("static/img/logo.png", "rb"))],
-        data={"from": "מערכת רישום לפעולה - מדנ <postmaster@nir.mailgun.org>",
+        data={"from": "מערכת רישום לפעולה - מדנ <admin@mail.ngc.org.il>",
               "to": to,
               "subject": u"רישום לפעולה במרכז דאייה נגב [%s]" % member,
               "text": u"נרשמת לפעולה במרכז הדאייה נגב ביום -  %s" % opdate,
@@ -410,7 +411,7 @@ def sendWeeklyEmail(fri,fri_guests, sat, sat_guests):
         "https://api.mailgun.net/v3/mail.ngc.org.il/messages",
         auth=("api", os.getenv('MAILGUN_KEY','')),
         files=[("inline", open("static/img/logo_48.png", "rb"))],
-        data={"from": "Nir Getter <ngetter@gmail.com>",
+        data={"from": "Nir Getter <admin@mail.ngc.org.il>",
               "to": ["Ngc@savoray.com"],
               "subject": u"תזכורת בנוגע לרישום לפעולה במדנ לסוף השבוע הקרוב",
               "text": u"תזכורת בנוגע לרישום לפעולה במדנ לסוף השבוע הקרוב",
