@@ -411,7 +411,7 @@ def sendWeeklyEmail(fri,fri_guests, sat, sat_guests):
         "https://api.mailgun.net/v3/mail.ngc.org.il/messages",
         auth=("api", os.getenv('MAILGUN_KEY','')),
         files=[("inline", open("static/img/logo_48.png", "rb"))],
-        data={"from": "Nir Getter <admin@mail.ngc.org.il>",
+        data={"from": "NGC admin<admin@mail.ngc.org.il>",
               "to": ["Ngc@savoray.com"],
               "subject": u"תזכורת בנוגע לרישום לפעולה במדנ לסוף השבוע הקרוב",
               "text": u"תזכורת בנוגע לרישום לפעולה במדנ לסוף השבוע הקרוב",
