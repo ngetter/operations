@@ -25,7 +25,7 @@ from premailer import transform
 ###### configuration
 try:
     LOCAL = os.getenv('C9_HOSTNAME')=="scheduleme-ngetter.c9users.io"# Make true if running from the IDE
-    MONGO_LOCAL = True and True # Make true if running from the IDE and the mongod is running too on the local machine
+    MONGO_LOCAL = LOCAL and True # Make true if running from the IDE and the mongod is running too on the local machine
     RETURN_TO = os.getenv('IP')
 except Exception:
     LOCAL = False
