@@ -71,7 +71,17 @@ class frmRegistration(Form):
 def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static'),
                                'ico/favicon.ico', mimetype='image/vnd.microsoft.icon')
+                               
+@app.route('/mobile')
+def mobile():
+    return send_from_directory(os.path.join(app.root_path, 'ionic'),
+                               'www/index.html', mimetype='text/html')
 
+@app.route('/build/<path:path>')
+def mobileBuild(path):
+    app.static_folder = os.path.join(app.root_path, 'ionic/www/build/')
+    return send_from_directory(os.path.join(app.root_path, 'ionic/www/build/'), path)
+                               
 @app.route('/service-worker.js')
 def serviceworker():
     return send_from_directory(os.path.join(app.root_path, 'static'),
