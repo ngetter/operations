@@ -167,7 +167,7 @@ def index():
     
 def getOperations(username):
     col = mdb['operations']
-    l = list(col.find({'date': {'$gt': dt.now(None) - td(2)}}).sort("date", 1).limit(12))
+    l = list(col.find({'date': {'$gte': dt.now(None) - td(2)}}).sort("date", 1).limit(12))
 
     for li in l:
         try:
