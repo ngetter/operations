@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 import os
 from scheduleme import *
-from scheduleme import getOperations
+from scheduleme.utils import *
 
 from flask import Flask, Markup, request, redirect, url_for, session, escape, render_template, abort, send_from_directory, jsonify
 
