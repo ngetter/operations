@@ -338,10 +338,3 @@ def sendReminder():
         sat_guests = 0        
         
     return sendWeeklyEmail(len(l_1),fri_guests, len(l_2), sat_guests)
-    # return str({'fri_num' : len(l_1),
-                # 'fri_guests' : fri_guests,
-                # 'fri_date': r[0]['date'],
-                # 'sat_num' : len(l_2),
-                # 'sat_guests' : sat_guests,
-                # 'sat_date': r[1]['date'],
-                # 'err' : err})
