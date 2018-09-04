@@ -1,1 +1,1 @@
-web: gunicorn registration:app
+web: gunicorn flask run
