@@ -526,8 +526,3 @@ def mytor(value, position):
             return TOR_SIZE - int(value) + position + 1
     else:
         return Markup("<i class='fa fa-exclamation-triangle'></i>")
-
-
-if __name__ == "__main__":
-    import os
-    app.run(debug=True, host=os.getenv('IP', '0.0.0.0'), port=int(os.getenv('PORT', 8080)))
