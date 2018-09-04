@@ -1,5 +1,7 @@
 # -*- coding: UTF-8 -*-
 import os
+import string
+
 from scheduleme import *
 
 def getOperations(username):
