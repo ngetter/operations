@@ -1,1 +1,1 @@
-web: gunicorn scheduleme:scheduleme
+web: gunicorn run
