@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 from scheduleme import app, mdb
 from flask import Flask, Markup, request, redirect, url_for, session, escape, render_template, abort, \
     send_from_directory, jsonify
