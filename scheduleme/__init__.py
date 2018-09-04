@@ -69,7 +69,7 @@ class frmRegistration(Form):
     plname = TextField(u'שם פרטי ושם משפחה', validators=[DataRequired(u'יש להקליד שם')])
 
 import scheduleme.route_api
-
+import scheduleme.views
 
 def getOperations(username):
     col = mdb['operations']
