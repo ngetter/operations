@@ -2,6 +2,9 @@
 import os
 import string
 
+from datetime import timedelta as td
+from datetime import datetime as dt
+
 from scheduleme import *
 
 def getOperations(username):
