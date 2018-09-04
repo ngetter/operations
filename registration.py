@@ -43,9 +43,10 @@ else:
     MONGODB_DATABASE = 'operations'
     MONGODB_USERNAME = 'nir'
     MONGODB_PASSWORD = '123456'
-############# configuration
 
 TOR_SIZE = 64
+
+############# configuration
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -163,7 +164,9 @@ def index():
     else:
         return redirect(url_for('register'))
 
-
+@app.route('/AddOperations', methods=['GET'])
+def addOperations():
+    return render_template('add_operations.html')
     
 def getOperations(username):
     col = mdb['operations']
