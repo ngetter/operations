@@ -25,8 +25,8 @@ logen = logging.getLogger('logentries')
 logen.setLevel(logging.INFO)
 logen.addHandler(LogentriesHandler(os.getenv('LOGENTRIES_KEY')))
 
-
-import scheduleme.forms
+# imports
+from scheduleme.forms import *
 import scheduleme.views
 import scheduleme.route_api
 
