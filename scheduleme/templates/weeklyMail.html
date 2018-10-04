@@ -4,30 +4,25 @@
 <div>
 <h3>רישום לפעולה במרכז הדאייה נגב</h3>
 
-<p style="text-align:right">שלום חברים</p>
-<p style="text-align:right;font-family: arial, sans-serif;">על פי החלטת הוועד, חניכים וסוליסטים שמעוניינים לטוס ביום פעילות צריכים להרשם לפעילות מראש באתר.
+<p>שלום חברים</p>
+<p>על פי החלטת הוועד, חניכים וסוליסטים שמעוניינים לטוס ביום פעילות צריכים להרשם לפעילות מראש באתר.
 חברים שיגיעו לפעילות ללא רישום מוקדם יטוסו על בסיס מקום פנוי ולאחר סיום כל סבב הטיסות הראשון של חברים שכן נרשמו.</p>
-<p style="text-align:right;font-family: arial, sans-serif;font-weight:bold;">כל מי שנרשם ולא מעוניין להגיע מתבקש לבטל את הרישום</p>
-
+<p>כל מי שנרשם ולא מעוניין להגיע מתבקש לבטל את הרישום</p>
 {% if membersNumber==0 %}
-<p style="text-align:right;font-family: arial, sans-serif;">עד כה לא נרשמו  חניכים או סוליסטים לפעולות סוף השבוע.</p>
+<p>עד כה לא נרשמו  חניכים או סוליסטים לפעולות סוף השבוע.</p>
 {% else %}
-<p style="text-align:right;font-family: arial, sans-serif;">עד עכשיו נרשמו לפעילות בסוף השבוע הקרוב <strong>
+<p>עד עכשיו נרשמו לפעילות בסוף השבוע הקרוב <strong>
 {{ membersNumber }}</strong> חברים</p>
-<p style="text-align:right;font-family: arial, sans-serif;">ליום שישי רשומים: <strong>
+<p>ליום שישי רשומים: <strong>
 {{ fri }}</strong> חברים ו <strong>{{ fri_guests }}</strong> אורחים</p>
-<p style="text-align:right;font-family: arial, sans-serif;">ליום שבת רשומים: <strong>
+<p>ליום שבת רשומים: <strong>
 {{ sat }}</strong> חברים ו <strong>{{ sat_guests }}</strong> אורחים</p>
-
 {% endif %}
-
-<p style="text-align:right;font-family: arial, sans-serif;">הרשמה לפעולה מתבצעת באמצעות לחיצה על הכפתור הכחול עם הכותרת "לא משתתף". לאחר הלחיצה הכפתור יהפוך ירוק וכותרתו "משתתף".</p>
+<p>הרשמה לפעולה מתבצעת באמצעות לחיצה על הכפתור הכחול עם הכותרת "לא משתתף". לאחר הלחיצה הכפתור יהפוך ירוק וכותרתו "משתתף".</p>
 </p>
-
-<li style="text-align:right;font-family: arial, sans-serif;">אפשר להיכנס מהאתר של המועדון <a href="http://www.ngc.org.il/%D7%AA%D7%95%D7%A8-%D7%97%D7%A0%D7%99%D7%9B%D7%99%D7%9D.html">בקישור הזה</a></li>
-<li style="text-align:right;font-family: arial, sans-serif;">מטלפונים סלולריים וטאבלטים מומלץ להכנס
+<li>אפשר להיכנס מהאתר של המועדון <a href="http://www.ngc.org.il/%D7%AA%D7%95%D7%A8-%D7%97%D7%A0%D7%99%D7%9B%D7%99%D7%9D.html">בקישור הזה</a></li>
+<li>מטלפונים סלולריים וטאבלטים מומלץ להכנס
 <a href="http://opsign.herokuapp.com/">
     בקישור הזה</a></li>
 
-</div>
 {% endblock %}
