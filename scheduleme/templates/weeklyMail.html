@@ -1,5 +1,4 @@
-﻿{% extends "base_email.html" %}
-
+{% extends "base_email.html" %}
 {% block content %}
 <div>
 <h3>רישום לפעולה במרכז הדאייה נגב</h3>
@@ -11,18 +10,9 @@
 {% if membersNumber==0 %}
 <p>עד כה לא נרשמו  חניכים או סוליסטים לפעולות סוף השבוע.</p>
 {% else %}
-<p>עד עכשיו נרשמו לפעילות בסוף השבוע הקרוב <strong>
-{{ membersNumber }}</strong> חברים</p>
-<p>ליום שישי רשומים: <strong>
-{{ fri }}</strong> חברים ו <strong>{{ fri_guests }}</strong> אורחים</p>
-<p>ליום שבת רשומים: <strong>
-{{ sat }}</strong> חברים ו <strong>{{ sat_guests }}</strong> אורחים</p>
 {% endif %}
-<p>הרשמה לפעולה מתבצעת באמצעות לחיצה על הכפתור הכחול עם הכותרת "לא משתתף". לאחר הלחיצה הכפתור יהפוך ירוק וכותרתו "משתתף".</p>
 </p>
-<li>אפשר להיכנס מהאתר של המועדון <a href="http://www.ngc.org.il/%D7%AA%D7%95%D7%A8-%D7%97%D7%A0%D7%99%D7%9B%D7%99%D7%9D.html">בקישור הזה</a></li>
-<li>מטלפונים סלולריים וטאבלטים מומלץ להכנס
-<a href="http://opsign.herokuapp.com/">
-    בקישור הזה</a></li>
+<li><a href="http://opsign.herokuapp.com/">לחץ כאן לכניסה למערכת הרישום
+</a></li>
 
 {% endblock %}
