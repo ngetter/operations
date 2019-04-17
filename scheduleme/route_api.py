@@ -19,7 +19,7 @@ def deleteOperation(del_date):
     mdb['operations'].remove({"date": ndate})
     return jsonify(data=str(ndate), success=True)
 
-@app.route('/api/batchdates/<start_date>', methods=['GET'])
+@app.route('/api/add/multi/<start_date>', methods=['GET'])
 def batchdates(start_date):
     nds = start_date.split("-") #new_date split
     friday_one = dt( int(nds[0]), int(nds[1]), int(nds[2]) )
