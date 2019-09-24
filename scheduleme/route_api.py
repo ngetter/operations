@@ -6,7 +6,6 @@ from datetime import timedelta as td
 from datetime import datetime as dt
 from bson.json_util import dumps as bdumps
 
-
 @app.route('/api/add/<new_date>', methods=['GET'])
 def add(new_date):
     ndate = addDate(new_date)
@@ -23,6 +22,9 @@ def deleteOperation(del_date):
 def batchdates(start_date):
     nds = start_date.split("-") #new_date split
     friday_one = dt( int(nds[0]), int(nds[1]), int(nds[2]) )
+    if friday_one.weekday() Not in [4,5] :
+        return 'Date should be friday or saturday'
+        
     add_day = td(days = 1)
     
     response = []
