@@ -34,7 +34,7 @@ def serviceworker():
 @app.route('/index')
 @app.route('/', methods=['POST', 'GET'])
 def index():
-    print ("hi i am index")
+    print ("hi i am index: runned from code")
     rule = request.url_rule
     print (rule.rule)
     if 'username' in session:
