@@ -1,0 +1,30 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+certifi = ">=2017.4.17"
+click = "==6.6"
+itsdangerous = "==0.24"
+mongokit = "==0.9.1.1"
+pymongo = "==4.0.2"
+requests = "==2.20.0"
+gunicorn = "==19.5.0"
+premailer = "==3.0.1"
+cssselect = "==1.0.1"
+cssutils = "==1.0.2"
+Flask = "==1.0"
+Flask-MongoKit = "==0.6"
+Flask-WTF = "==0.13.1"
+Flask-Cors = "==3.0.3"
+Jinja2 = "==2.11.3"
+Logentries = ">=0.17"
+MarkupSafe = "==0.23"
+Werkzeug = "==0.15.3"
+WTForms = "==2.1"
+
+[dev-packages]
+
+[requires]
+python_version = "3.8"
