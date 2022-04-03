@@ -17,11 +17,11 @@ if MONGO_LOCAL:
     MONGODB_DATABASE = 'test'
 else:
 
-    MONGODB_HOST = 'ngc-cadettes.iuojp.mongodb.net'
-    MONGODB_PORT = 27928
-    MONGODB_DATABASE = 'operations'
-    MONGODB_USERNAME = 'nirg'
-    MONGODB_PASSWORD = 'dilk2d123'
+    MONGODB_HOST = os.getenv('MONGODB_HOST')
+    MONGODB_PORT = os.getenv('MONGODB_PORT')
+    MONGODB_DATABASE = os.getenv('MONGODB_DATABASE')
+    MONGODB_USERNAME = os.getenv('MONGODB_USERNAME')
+    MONGODB_PASSWORD = os.getenv('MONGODB_PASSWORD')
 
 TOR_SIZE = 64
 
