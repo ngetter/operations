@@ -1,4 +1,4 @@
-certifi==2016.9.26
+certifi>=2017.4.17
 click==6.6
 Flask==0.12
 Flask-MongoKit==0.6
@@ -6,7 +6,7 @@ Flask-WTF==0.13.1
 Flask-Cors==3.0.3
 itsdangerous==0.24
 Jinja2==2.8.1
-Logentries==0.17
+Logentries>=0.17
 MarkupSafe==0.23
 mongokit==0.9.1.1
 pymongo==2.8
