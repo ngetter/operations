@@ -17,11 +17,11 @@ if MONGO_LOCAL:
     MONGODB_DATABASE = 'test'
 else:
 
-    MONGODB_HOST = 'ds127928.mlab.com'
+    MONGODB_HOST = 'ngc-cadettes.iuojp.mongodb.net'
     MONGODB_PORT = 27928
     MONGODB_DATABASE = 'operations'
-    MONGODB_USERNAME = 'nir'
-    MONGODB_PASSWORD = '123456'
+    MONGODB_USERNAME = 'nirg'
+    MONGODB_PASSWORD = 'dilk2d123'
 
 TOR_SIZE = 64
 
