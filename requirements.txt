@@ -12,7 +12,7 @@ idna==2.7
 itsdangerous==0.24
 Jinja2==2.11.3
 Logentries==0.17
-lxml==4.8.0
+lxml==4.9.1
 MarkupSafe==0.23
 mongokit==0.9.1.1
 premailer==3.0.1
